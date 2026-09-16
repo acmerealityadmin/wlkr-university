@@ -1,0 +1,139 @@
+{
+  "common": {
+    "languageName": "English",
+    "siteName": "WLKR University",
+    "nav": {
+      "home": "Home",
+      "courses": "Courses",
+      "articles": "Articles",
+      "media": "Media",
+      "login": "Log in",
+      "dashboard": "Dashboard",
+      "certificates": "Certificates",
+      "logout": "Log out",
+      "settings": "Settings"
+    },
+    "footer": {
+      "tagline": "Professional development for educators using the WLKR Learning System.",
+      "rights": "All rights reserved."
+    },
+    "search": {
+      "placeholder": "Search courses, lessons, and articles…",
+      "voiceHint": "Tap the microphone and speak your search",
+      "listening": "Listening…",
+      "noResults": "No results found",
+      "openHint": "Press to search"
+    },
+    "loading": "Loading…",
+    "error": "Something went wrong."
+  },
+  "public": {
+    "home": {
+      "title": "Professional Development for Educators",
+      "description": "Free professional development for educators using the WLKR Learning System — courses, articles, and certificates on teaching with AI.",
+      "hero": {
+        "eyebrow": "Educator Professional Development",
+        "title": "Grow your practice with WLKR University",
+        "subtitle": "Courses, articles, and certificates built for educators using the WLKR Learning System — learn to teach with AI, at your own pace.",
+        "cta": "Browse courses",
+        "secondaryCta": "Read the latest articles"
+      },
+      "coursesSection": {
+        "title": "Featured courses",
+        "viewAll": "View all courses"
+      },
+      "articlesSection": {
+        "title": "From the blog",
+        "viewAll": "View all articles"
+      },
+      "cta": {
+        "title": "Ready to start learning?",
+        "subtitle": "Log in with your WLKR account to enroll, take quizzes, and earn certificates.",
+        "button": "Log in to get started"
+      }
+    },
+    "courses": {
+      "title": "Courses",
+      "description": "Professional development courses for educators using the WLKR Learning System.",
+      "empty": "No courses are published yet — check back soon.",
+      "enrollCta": "Log in to enroll"
+    },
+    "articles": {
+      "title": "Articles",
+      "description": "Guidance and ideas for educators teaching with AI and the WLKR Learning System.",
+      "empty": "No articles are published yet — check back soon.",
+      "readMore": "Read more"
+    },
+    "media": {
+      "title": "Media",
+      "description": "Public media resources from WLKR University.",
+      "comingSoon": "A public media library is coming soon. Log in to browse the full media collection."
+    },
+    "certificateVerify": {
+      "title": "Certificate Verification",
+      "description": "Verify a WLKR University certificate of completion.",
+      "valid": "This is a valid WLKR University certificate.",
+      "invalid": "No certificate was found for this verification code.",
+      "recipient": "Issued to",
+      "course": "Course",
+      "issuedAt": "Issued on",
+      "number": "Certificate number"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "For educators using the WLKR Learning System",
+      "email": "Email address",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "error": "Invalid email or password",
+      "requiresEducator": "This portal requires an educator account."
+    }
+  },
+  "app": {
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Welcome back",
+      "myEnrollments": "My courses",
+      "noEnrollments": "You haven't enrolled in any courses yet.",
+      "browseCourses": "Browse courses",
+      "progress": "Progress",
+      "statusActive": "In progress",
+      "statusCompleted": "Completed",
+      "statusDropped": "Dropped"
+    },
+    "course": {
+      "enroll": "Enroll in this course",
+      "enrolled": "You're enrolled",
+      "lessons": "Lessons",
+      "takeQuiz": "Take the quiz",
+      "backToCourse": "Back to course"
+    },
+    "quiz": {
+      "title": "Quiz",
+      "submit": "Submit answers",
+      "submitting": "Submitting…",
+      "passed": "You passed!",
+      "failed": "Not quite — try again.",
+      "score": "Score",
+      "passingScore": "Passing score",
+      "certificateEarned": "Congratulations — you've earned a certificate for this course!",
+      "viewCertificate": "View your certificate"
+    },
+    "certificates": {
+      "title": "My Certificates",
+      "empty": "You haven't earned any certificates yet.",
+      "download": "Download PDF",
+      "issuedOn": "Issued on"
+    },
+    "settings": {
+      "title": "Settings",
+      "biometricTitle": "{label}",
+      "biometricDescription": "Use {label} to quickly unlock WLKR University on this device.",
+      "enable": "Enable {label}",
+      "disable": "Disable"
+    }
+  }
+}

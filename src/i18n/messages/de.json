@@ -1,0 +1,6 @@
+{
+  "common": {
+    "languageName": "Deutsch",
+    "nav": { "home": "Startseite", "courses": "Kurse", "articles": "Artikel", "login": "Anmelden" }
+  }
+}

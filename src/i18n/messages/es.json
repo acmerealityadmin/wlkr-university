@@ -1,0 +1,6 @@
+{
+  "common": {
+    "languageName": "Español",
+    "nav": { "home": "Inicio", "courses": "Cursos", "articles": "Artículos", "login": "Iniciar sesión" }
+  }
+}

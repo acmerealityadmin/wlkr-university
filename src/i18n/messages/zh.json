@@ -1,0 +1,6 @@
+{
+  "common": {
+    "languageName": "中文",
+    "nav": { "home": "首页", "courses": "课程", "articles": "文章", "login": "登录" }
+  }
+}

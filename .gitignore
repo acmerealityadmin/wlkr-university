@@ -1,0 +1,21 @@
+/node_modules
+/.next
+/out
+/dist
+*.tsbuildinfo
+.env.local
+.DS_Store
+
+# Capacitor / native build artifacts (native projects themselves are checked in)
+android/.gradle/
+android/.idea/
+android/app/build/
+android/build/
+android/local.properties
+android/capacitor-cordova-android-plugins/build/
+ios/App/build/
+ios/App/Pods/
+ios/DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/

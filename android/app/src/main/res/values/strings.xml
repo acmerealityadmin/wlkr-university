@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">WLKR University</string>
+    <string name="title_activity_main">WLKR University</string>
+    <string name="package_name">ai.wlkr.university</string>
+    <string name="custom_url_scheme">ai.wlkr.university</string>
+</resources>

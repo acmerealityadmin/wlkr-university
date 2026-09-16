@@ -1,0 +1,6 @@
+{
+  "common": {
+    "languageName": "Русский",
+    "nav": { "home": "Главная", "courses": "Курсы", "articles": "Статьи", "login": "Войти" }
+  }
+}
