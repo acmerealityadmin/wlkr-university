@@ -1,14 +1,25 @@
 import type { Metadata } from 'next';
-import { Inter, Lora } from 'next/font/google';
+import { Roboto, Roboto_Slab } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { NativeBootstrap } from '@/components/NativeBootstrap';
+import { Providers } from '@/components/providers';
 import '../globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
-const lora = Lora({ subsets: ['latin'], variable: '--font-lora', display: 'swap' });
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+const robotoSlab = Roboto_Slab({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-heading',
+  display: 'swap',
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -50,10 +61,12 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
-      <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
+      <body className={`${roboto.variable} ${robotoSlab.variable} font-sans font-medium antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <NativeBootstrap />
-          {children}
+          <Providers>
+            <NativeBootstrap />
+            {children}
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

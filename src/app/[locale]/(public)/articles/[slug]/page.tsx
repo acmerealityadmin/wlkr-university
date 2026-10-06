@@ -3,12 +3,10 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { formatDate } from '@/lib/utils';
 import { publicArticlesApi } from '@/lib/api';
-
-// Known launch slugs — see scripts/seedUniversity.js in wlkr-ecko-server.
-const KNOWN_SLUGS = ['anatomy-of-a-prompt', 'ai-basics-for-teachers', 'using-technology-in-the-classroom'];
+import { KNOWN_ARTICLE_SLUGS } from '@/lib/known-catalog';
 
 export function generateStaticParams() {
-  return KNOWN_SLUGS.map((slug) => ({ slug }));
+  return KNOWN_ARTICLE_SLUGS.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -37,17 +35,17 @@ export default async function ArticleDetailPage({
   if (!article) notFound();
 
   return (
-    <article className="master-column max-w-2xl py-16">
+    <article className="max-w-2xl">
       <div className="flex flex-wrap gap-2">
         {article.tags.map((tag) => (
-          <span key={tag} className="rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-medium text-brand-800 dark:bg-brand-900/40 dark:text-brand-300">
+          <span key={tag} className="rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-800 dark:bg-brand-900/40 dark:text-brand-300">
             {tag}
           </span>
         ))}
       </div>
-      <h1 className="mt-4 font-heading text-3xl font-semibold text-gray-900 dark:text-gray-100">{article.title}</h1>
+      <h2 className="mt-4 font-heading text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">{article.title}</h2>
       {article.publishedAt && <p className="mt-2 text-sm text-gray-400">{formatDate(article.publishedAt)}</p>}
-      <div className="mt-8 max-w-none whitespace-pre-line text-gray-700 leading-relaxed dark:text-gray-300">{article.body}</div>
+      <div className="mt-6 whitespace-pre-line text-sm leading-relaxed text-gray-700 dark:text-gray-300">{article.body}</div>
     </article>
   );
 }

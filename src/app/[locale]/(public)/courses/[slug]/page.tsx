@@ -1,19 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
-import { Button } from '@/components/ui/button';
+import { setRequestLocale } from 'next-intl/server';
+import { CourseEntryCta } from '@/components/learning/CourseEntryCta';
 import { publicCoursesApi } from '@/lib/api';
-
-// The public API only exposes a LIST endpoint (no /public/courses/:slug) —
-// fetch the catalog and find by slug. Fine at this catalog size; revisit if
-// it grows. Known launch slugs hardcoded here so `next build` (static
-// export) doesn't require network access to enumerate params — see
-// scripts/seedUniversity.js in wlkr-ecko-server for the source of truth.
-const KNOWN_SLUGS = ['using-ai-in-k-8', 'teaching-ai-with-wlkrai'];
+import { PracticeLinks } from '@/components/learning/PracticeLinks';
+import { hoursLabel } from '@/components/learning/TrackBadge';
+import { KNOWN_COURSE_SLUGS } from '@/lib/known-catalog';
 
 export function generateStaticParams() {
-  return KNOWN_SLUGS.map((slug) => ({ slug }));
+  return KNOWN_COURSE_SLUGS.map((slug) => ({ slug }));
 }
 
 async function findCourse(slug: string, locale: string) {
@@ -43,24 +38,28 @@ export default async function CourseDetailPage({
 }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations('public.courses');
   const course = await findCourse(slug, locale);
   if (!course) notFound();
 
   return (
-    <div className="master-column py-16">
+    <div className="max-w-2xl">
       <div className="flex flex-wrap gap-2">
         {course.tags.map((tag) => (
-          <span key={tag} className="rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-medium text-brand-800 dark:bg-brand-900/40 dark:text-brand-300">
+          <span key={tag} className="rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-800 dark:bg-brand-900/40 dark:text-brand-300">
             {tag}
           </span>
         ))}
       </div>
-      <h1 className="mt-4 font-heading text-3xl font-semibold text-gray-900 dark:text-gray-100">{course.title}</h1>
-      <p className="mt-4 max-w-2xl whitespace-pre-line text-gray-600 dark:text-gray-300">{course.description}</p>
-      <Button asChild size="lg" className="mt-8">
-        <Link href="/login">{t('enrollCta')}</Link>
-      </Button>
+      <h2 className="mt-4 font-heading text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">{course.title}</h2>
+      {hoursLabel(course.hoursCredit) && (
+        <p className="mt-2 text-sm text-gray-500">{hoursLabel(course.hoursCredit)}</p>
+      )}
+      {course.competencyLine && (
+        <p className="mt-2 text-sm font-medium text-gray-700 dark:text-gray-300">{course.competencyLine}</p>
+      )}
+      <p className="mt-3 max-w-2xl whitespace-pre-line text-sm leading-relaxed text-gray-600 dark:text-gray-300">{course.description}</p>
+      <PracticeLinks links={course.practiceLinks} />
+      <CourseEntryCta slug={slug} />
     </div>
   );
 }

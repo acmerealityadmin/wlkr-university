@@ -52,16 +52,16 @@ export function QuizView({ courseSlug }: { courseSlug: string }) {
   };
 
   if (quiz === undefined) return <PageSpinner />;
-  if (quiz === null) return <p className="text-gray-500">No quiz found for this course.</p>;
+  if (quiz === null) return <p className="text-muted-foreground">No quiz found for this course.</p>;
 
   if (result) {
     return (
       <div className="max-w-lg">
-        <h1 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-        <p className="mt-4 text-lg font-medium">
+        <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">{t('title')}</h1>
+        <p className="mt-4 text-lg font-medium text-foreground">
           {result.attempt.passed ? t('passed') : t('failed')}
         </p>
-        <p className="mt-1 text-gray-500">
+        <p className="mt-1 text-muted-foreground">
           {t('score')}: {result.attempt.score}% ({t('passingScore')}: {quiz.passingScorePercent}%)
         </p>
         {result.certificate && (
@@ -71,6 +71,11 @@ export function QuizView({ courseSlug }: { courseSlug: string }) {
               <Link href="/app/certificates">{t('viewCertificate')}</Link>
             </Button>
           </div>
+        )}
+        {result.attempt.passed && (
+          <Button asChild className="mt-6">
+            <Link href={`/app/courses/${courseSlug}/practice`}>{t('practiceChat')}</Link>
+          </Button>
         )}
         {!result.attempt.passed && (
           <Button className="mt-6" onClick={() => setResult(null)}>
@@ -83,19 +88,23 @@ export function QuizView({ courseSlug }: { courseSlug: string }) {
 
   return (
     <div className="max-w-lg">
-      <h1 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{quiz.title}</h1>
+      <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">{quiz.title}</h1>
       <div className="mt-6 space-y-6">
         {quiz.questions.map((q, qIndex) => (
-          <fieldset key={qIndex} className="rounded-xl border border-gray-100 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-            <legend className="px-1 font-medium text-gray-900 dark:text-gray-100">{q.prompt}</legend>
+          <fieldset key={qIndex} className="rounded-xl border border-border/80 bg-card p-4 shadow-sm">
+            <legend className="px-1 font-medium text-foreground">{q.prompt}</legend>
             <div className="mt-2 space-y-2">
               {q.choices.map((choice, cIndex) => (
-                <label key={cIndex} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <label
+                  key={cIndex}
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 text-sm text-foreground/90 hover:bg-muted"
+                >
                   <input
                     type="radio"
                     name={`question-${qIndex}`}
                     checked={answers[qIndex] === cIndex}
                     onChange={() => setAnswers((prev) => ({ ...prev, [qIndex]: cIndex }))}
+                    className="accent-brand-600"
                   />
                   {choice}
                 </label>

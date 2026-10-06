@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { PageSpinner } from '@/components/ui/spinner';
 import { coursesApi, lessonsApi } from '@/lib/api';
+import { PracticeLinks } from '@/components/learning/PracticeLinks';
+import { LessonBody } from '@/components/learning/LessonBody';
 import type { Lesson } from '@/types/api';
 
 export function LessonView({ courseSlug, lessonSlug }: { courseSlug: string; lessonSlug: string }) {
@@ -30,15 +32,18 @@ export function LessonView({ courseSlug, lessonSlug }: { courseSlug: string; les
   }, [courseSlug, lessonSlug]);
 
   if (lesson === undefined) return <PageSpinner />;
-  if (lesson === null) return <p className="text-gray-500">Lesson not found.</p>;
+  if (lesson === null) return <p className="text-muted-foreground">Lesson not found.</p>;
 
   return (
     <div className="max-w-2xl">
-      <Link href={`/app/courses/${courseSlug}`} className="text-sm text-brand-600 hover:underline">
+      <Link href={`/app/courses/${courseSlug}`} className="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
         ← {t('backToCourse')}
       </Link>
-      <h1 className="mt-2 font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{lesson.title}</h1>
-      <div className="mt-6 whitespace-pre-line leading-relaxed text-gray-700 dark:text-gray-300">{lesson.body}</div>
+      <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">{lesson.title}</h2>
+      <div className="mt-6">
+        <LessonBody body={lesson.body} />
+      </div>
+      <PracticeLinks links={lesson.practiceLinks} title={t('practice')} />
     </div>
   );
 }

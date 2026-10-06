@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { publicCoursesApi, publicArticlesApi } from '@/lib/api';
+import { ContentCard } from '@/components/layout/ContentCard';
+import { HomeStartCta } from '@/components/layout/HomeStartCta';
+import { publicCoursesApi, publicArticlesApi, publicWebinarsApi } from '@/lib/api';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -16,89 +16,84 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   const t = await getTranslations('public.home');
 
-  // Build-time fetch against wlkr-ecko-server's public endpoints. Falls back
-  // to empty state if the API isn't reachable at build time — new
-  // courses/articles show up on the next rebuild+redeploy.
-  const [courses, articles] = await Promise.all([
+  const [courses, articles, webinars] = await Promise.all([
     publicCoursesApi.list({ locale }).then((d) => d.courses).catch(() => []),
     publicArticlesApi.list({ locale }).then((d) => d.articles).catch(() => []),
+    publicWebinarsApi.list().then((d) => d.webinars).catch(() => []),
   ]);
 
   return (
-    <div>
-      <section className="master-column py-16 sm:py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand-600">{t('hero.eyebrow')}</p>
-          <h1 className="mt-3 font-heading text-4xl font-semibold text-gray-900 sm:text-5xl dark:text-gray-100">
-            {t('hero.title')}
-          </h1>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">{t('hero.subtitle')}</p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild size="lg">
-              <Link href="/courses">{t('hero.cta')}</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/articles">{t('hero.secondaryCta')}</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+    <div className="space-y-8">
+      <p className="max-w-2xl text-sm text-gray-500 dark:text-gray-400">{t('hero.subtitle')}</p>
 
       {courses.length > 0 && (
-        <section className="master-column py-12">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('coursesSection.title')}</h2>
-            <Link href="/courses" className="text-sm font-medium text-brand-600 hover:underline">
+        <section>
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="font-heading text-lg font-medium text-gray-900 dark:text-gray-100">{t('coursesSection.title')}</h2>
+            <Link href="/courses" className="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
               {t('coursesSection.viewAll')}
             </Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {courses.slice(0, 3).map((course) => (
-              <Link key={course.slug} href={`/courses/${course.slug}`}>
-                <Card className="h-full transition-shadow hover:shadow-card-hover">
-                  <CardHeader>
-                    <CardTitle>{course.title}</CardTitle>
-                    <CardDescription className="line-clamp-3">{course.description}</CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
+              <ContentCard
+                key={course.slug}
+                href={`/courses/${course.slug}`}
+                title={course.title}
+                description={course.description}
+                kind="course"
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {webinars.length > 0 && (
+        <section>
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="font-heading text-lg font-medium text-gray-900 dark:text-gray-100">{t('webinarsSection.title')}</h2>
+            <Link href="/webinars" className="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+              {t('webinarsSection.viewAll')}
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {webinars.slice(0, 3).map((webinar) => (
+              <ContentCard
+                key={webinar.slug}
+                href={`/webinars/${webinar.slug}`}
+                title={webinar.title}
+                description={webinar.description}
+                meta={new Date(webinar.startsAt).toLocaleString()}
+                kind="course"
+              />
             ))}
           </div>
         </section>
       )}
 
       {articles.length > 0 && (
-        <section className="master-column py-12">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('articlesSection.title')}</h2>
-            <Link href="/articles" className="text-sm font-medium text-brand-600 hover:underline">
+        <section>
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="font-heading text-lg font-medium text-gray-900 dark:text-gray-100">{t('articlesSection.title')}</h2>
+            <Link href="/articles" className="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
               {t('articlesSection.viewAll')}
             </Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {articles.slice(0, 3).map((article) => (
-              <Link key={article.slug} href={`/articles/${article.slug}`}>
-                <Card className="h-full transition-shadow hover:shadow-card-hover">
-                  <CardHeader>
-                    <CardTitle>{article.title}</CardTitle>
-                    <CardDescription className="line-clamp-3">{article.excerpt}</CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
+              <ContentCard
+                key={article.slug}
+                href={`/articles/${article.slug}`}
+                title={article.title}
+                description={article.excerpt}
+                kind="article"
+              />
             ))}
           </div>
         </section>
       )}
 
-      <section className="border-t border-gray-100 bg-brand-50/50 py-16 dark:border-gray-800 dark:bg-brand-950/10">
-        <div className="master-column text-center">
-          <h2 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('cta.title')}</h2>
-          <p className="mt-2 text-gray-600 dark:text-gray-300">{t('cta.subtitle')}</p>
-          <Button asChild size="lg" className="mt-6">
-            <Link href="/login">{t('cta.button')}</Link>
-          </Button>
-        </div>
-      </section>
+      <HomeStartCta />
     </div>
   );
 }

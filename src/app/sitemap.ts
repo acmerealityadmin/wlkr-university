@@ -10,9 +10,16 @@ const BASE_URL = 'https://university.wlkr.ai';
 // wlkr-ecko-server. If the catalog grows past a handful of items, switch to
 // generateSitemaps() enumerating courses/articles from the public API at
 // build time instead of hand-listing them here.
-const STATIC_PATHS = ['', '/courses', '/articles', '/media'];
-const COURSE_SLUGS = ['using-ai-in-k-8', 'teaching-ai-with-wlkrai'];
+const STATIC_PATHS = ['', '/courses', '/articles', '/media', '/webinars'];
+const COURSE_SLUGS = [
+  'using-ai-in-k-8',
+  'teaching-ai-with-wlkrai',
+  'wlkr-in-30-minutes',
+  'first-week-in-the-classroom',
+  'district-admin-roster-and-clever',
+];
 const ARTICLE_SLUGS = ['anatomy-of-a-prompt', 'ai-basics-for-teachers', 'using-technology-in-the-classroom'];
+const WEBINAR_SLUGS = ['ecko-office-hours', 'clever-go-live-clinic', 'infinity-and-school-hub-recording'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
@@ -32,6 +39,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
     for (const slug of ARTICLE_SLUGS) {
       entries.push({ url: `${BASE_URL}/${locale}/articles/${slug}`, lastModified, changeFrequency: 'monthly', priority: 0.6 });
+    }
+    for (const slug of WEBINAR_SLUGS) {
+      entries.push({ url: `${BASE_URL}/${locale}/webinars/${slug}`, lastModified, changeFrequency: 'weekly', priority: 0.7 });
     }
   }
 

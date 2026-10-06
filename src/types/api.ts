@@ -26,9 +26,24 @@ export interface User {
   username: string;
   firstName?: string;
   lastName?: string;
+  avatarUrl?: string;
+  locale?: string;
   role: UserRole;
   roleSubtype?: string | null;
   status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+  hasPassword?: boolean;
+  providers?: string[];
+  schoolId?: string | null;
+  districtId?: string | null;
+  schoolIds?: string[];
+  districtIds?: string[];
+}
+
+export type CourseTrack = '' | 'teacher' | 'admin' | 'first_30_days';
+
+export interface PracticeLink {
+  label: string;
+  href: string;
 }
 
 export interface AuthTokens {
@@ -54,6 +69,10 @@ export interface Course {
   thumbnailMediaId: string | null;
   locale: string;
   tags: string[];
+  track?: CourseTrack;
+  hoursCredit?: number;
+  competencyLine?: string;
+  practiceLinks?: PracticeLink[];
   status: ContentStatus;
   order: number;
   createdAt: string;
@@ -73,16 +92,22 @@ export interface PublicCourse {
   thumbnailMediaId: string | null;
   locale: string;
   tags: string[];
+  track?: CourseTrack;
+  hoursCredit?: number;
+  competencyLine?: string;
+  practiceLinks?: PracticeLink[];
 }
 
 export interface Lesson {
-  id: string;
+  id?: string;
+  _id?: string;
   courseId: string;
   title: string;
   slug: string;
   body: string;
   order: number;
-  mediaIds: string[];
+  mediaIds?: string[];
+  practiceLinks?: PracticeLink[];
   status: ContentStatus;
   createdAt: string;
   updatedAt: string;
@@ -130,11 +155,21 @@ export type EnrollmentStatus = 'ACTIVE' | 'DROPPED' | 'COMPLETED';
 export interface Enrollment {
   _id: string;
   userId: string;
-  courseId: { _id: string; title: string; slug: string; thumbnailMediaId: string | null } | string;
+  courseId: {
+    _id: string;
+    title: string;
+    slug: string;
+    thumbnailMediaId: string | null;
+    track?: CourseTrack;
+    hoursCredit?: number;
+  } | string;
   status: EnrollmentStatus;
   progressPercent: number;
   enrolledAt: string;
   completedAt: string | null;
+  required?: boolean;
+  dueAt?: string | null;
+  assignmentId?: string | null;
 }
 
 export interface OwnerCertificate {
@@ -144,17 +179,21 @@ export interface OwnerCertificate {
   certificateNumber: string;
   verificationCode: string;
   issuedAt: string;
+  hoursCredit?: number;
+  competencyLine?: string;
 }
 
 export interface CertificateListItem {
   _id: string;
   userId: string;
-  courseId: { _id: string; title: string; slug: string } | string;
+  courseId: { _id: string; title: string; slug: string; hoursCredit?: number; competencyLine?: string } | string;
   enrollmentId: string;
   certificateNumber: string;
   verificationCode: string;
   pdfStorageKey: string;
   issuedAt: string;
+  hoursCredit?: number;
+  competencyLine?: string;
 }
 
 export interface PublicCertificate {
@@ -164,6 +203,8 @@ export interface PublicCertificate {
   courseTitle: string | null;
   recipientName: string | null;
   issuedAt: string;
+  hoursCredit?: number;
+  competencyLine?: string;
 }
 
 export interface Article {
@@ -213,4 +254,168 @@ export interface SearchResult {
   excerpt?: string;
   locale?: string;
   url: string;
+}
+
+export type CalendarEventKind = 'personal' | 'session' | 'deadline' | 'course' | 'webinar' | 'office_hours';
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  description: string;
+  startsAt: string;
+  endsAt: string;
+  allDay: boolean;
+  kind: CalendarEventKind;
+  courseId: string | null;
+  href?: string | null;
+  readOnly?: boolean;
+  source?: string;
+  webinarId?: string;
+  attendanceStatus?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type WebinarKind = 'webinar' | 'office_hours';
+export type WebinarAttendanceStatus = 'RSVP' | 'ATTENDED' | 'NO_SHOW';
+
+export interface Webinar {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  hostName: string;
+  kind: WebinarKind;
+  productTag: string;
+  startsAt: string;
+  endsAt: string;
+  joinUrl: string;
+  recordingUrl: string;
+  slidesUrl: string;
+  relatedCourseId: string | null;
+  relatedArticleSlug: string;
+  hoursCredit: number;
+  locale?: string;
+  tags: string[];
+  status?: ContentStatus;
+}
+
+export interface WebinarAttendance {
+  id?: string;
+  webinarId?: string;
+  status: WebinarAttendanceStatus;
+  joinedAt?: string | null;
+  minutesWatched?: number;
+}
+
+export interface PublicWebinar {
+  title: string;
+  slug: string;
+  description: string;
+  hostName: string;
+  kind: WebinarKind;
+  productTag: string;
+  startsAt: string;
+  endsAt: string;
+  recordingUrl: string;
+  slidesUrl: string;
+  relatedArticleSlug: string;
+  hoursCredit: number;
+  tags: string[];
+  upcoming: boolean;
+}
+
+export interface TrainingAssignment {
+  id: string;
+  courseId: string;
+  course: { title: string; slug: string; hoursCredit: number } | null;
+  districtId: string | null;
+  schoolId: string | null;
+  dueAt: string | null;
+  status: string;
+  createdAt: string;
+}
+
+export interface TrainingReportRow {
+  userId: string;
+  name: string;
+  role: string;
+  status: string;
+  progressPercent: number;
+  completedAt: string | null;
+  dueAt: string | null;
+}
+
+export interface TrainingReport {
+  assignment: {
+    id: string;
+    dueAt: string | null;
+    course: { id: string; title: string; slug: string; hoursCredit: number } | null;
+  };
+  summary: { assigned: number; completed: number; percentComplete: number };
+  rows: TrainingReportRow[];
+}
+
+export interface CalendarEventInput {
+  title: string;
+  description?: string;
+  startsAt: string;
+  endsAt?: string;
+  allDay?: boolean;
+  kind?: CalendarEventKind;
+  courseId?: string | null;
+}
+
+export type UniversityTopicId =
+  | 'music_education'
+  | 'history_facts'
+  | 'math'
+  | 'language_arts'
+  | 'science'
+  | 'history'
+  | 'technology';
+
+export type UniversityFormatId = 'articles' | 'videos' | 'webinars' | 'conferences' | 'other';
+
+export interface UniversityAdditionalEmail {
+  email: string;
+  label: string;
+  notify: boolean;
+}
+
+export interface UniversityNotificationChannels {
+  push: boolean;
+  sms: boolean;
+  email: boolean;
+}
+
+export interface UniversityProfile {
+  phone: string;
+  additionalEmails: UniversityAdditionalEmail[];
+  topics: UniversityTopicId[];
+  formats: UniversityFormatId[];
+  notifyTopics: UniversityTopicId[];
+  notifyFormats: UniversityFormatId[];
+  channels: UniversityNotificationChannels;
+  notifyPrimaryEmail: boolean;
+  otherNotes: string;
+  updatedAt: string | null;
+}
+
+export interface UniversityProfileInput {
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  locale?: string;
+  currentPassword?: string;
+  newPassword?: string;
+  phone?: string;
+  additionalEmails?: UniversityAdditionalEmail[];
+  topics?: UniversityTopicId[];
+  formats?: UniversityFormatId[];
+  notifyTopics?: UniversityTopicId[];
+  notifyFormats?: UniversityFormatId[];
+  channels?: UniversityNotificationChannels;
+  notifyPrimaryEmail?: boolean;
+  otherNotes?: string;
 }

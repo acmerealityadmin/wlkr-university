@@ -1,13 +1,8 @@
 import { LessonView } from './LessonView';
-
-// Known launch (course slug, lesson slug) pairs — see scripts/seedUniversity.js.
-const KNOWN_PAIRS = [
-  { slug: 'using-ai-in-k-8', lessonSlug: 'introduction' },
-  { slug: 'teaching-ai-with-wlkrai', lessonSlug: 'introduction' },
-];
+import { KNOWN_LESSON_PAIRS } from '@/lib/known-catalog';
 
 export function generateStaticParams() {
-  return KNOWN_PAIRS;
+  return [...KNOWN_LESSON_PAIRS];
 }
 
 export default async function LessonPage({

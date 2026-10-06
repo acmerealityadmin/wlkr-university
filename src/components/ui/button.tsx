@@ -4,16 +4,18 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
+  'inline-flex items-center justify-center gap-2 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
   {
     variants: {
       variant: {
-        default: 'bg-brand-600 text-white shadow-sm hover:bg-brand-700',
-        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700',
-        outline: 'border border-gray-200 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800',
-        ghost: 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+        default:
+          'bg-brand-600 text-white shadow-sm hover:bg-brand-700 dark:bg-brand-500 dark:text-white dark:hover:bg-brand-400',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-muted',
+        outline:
+          'border border-border bg-card/80 text-foreground hover:bg-muted hover:border-brand-300/70 dark:hover:border-brand-500/40',
+        ghost: 'text-muted-foreground hover:bg-muted hover:text-foreground',
         destructive: 'bg-rose-600 text-white shadow-sm hover:bg-rose-700',
-        link: 'text-brand-600 underline-offset-4 hover:underline p-0 h-auto',
+        link: 'text-brand-600 underline-offset-4 hover:underline p-0 h-auto dark:text-brand-400',
       },
       size: {
         default: 'h-9 px-4 py-2',

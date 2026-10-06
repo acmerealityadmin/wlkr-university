@@ -1,8 +1,14 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { ContentCard, PageIntro } from '@/components/layout/ContentCard';
 import { publicCoursesApi } from '@/lib/api';
+import { hoursLabel } from '@/components/learning/TrackBadge';
+
+const TRACK_META: Record<string, string> = {
+  teacher: 'Teachers',
+  admin: 'Admins',
+  first_30_days: 'First 30 days',
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -17,24 +23,28 @@ export default async function CoursesPage({ params }: { params: Promise<{ locale
   const courses = await publicCoursesApi.list({ locale }).then((d) => d.courses).catch(() => []);
 
   return (
-    <div className="master-column py-16">
-      <h1 className="font-heading text-3xl font-semibold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-      <p className="mt-2 max-w-2xl text-gray-600 dark:text-gray-300">{t('description')}</p>
+    <div>
+      <PageIntro description={t('description')} />
 
       {courses.length === 0 ? (
-        <p className="mt-10 text-gray-500">{t('empty')}</p>
+        <p className="text-sm text-gray-500">{t('empty')}</p>
       ) : (
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => (
-            <Link key={course.slug} href={`/courses/${course.slug}`}>
-              <Card className="h-full transition-shadow hover:shadow-card-hover">
-                <CardHeader>
-                  <CardTitle>{course.title}</CardTitle>
-                  <CardDescription className="line-clamp-3">{course.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {courses.map((course) => {
+            const hours = hoursLabel(course.hoursCredit);
+            const track = course.track ? TRACK_META[course.track] : null;
+            const meta = [hours, track].filter(Boolean).join(' · ') || undefined;
+            return (
+            <ContentCard
+              key={course.slug}
+              href={`/courses/${course.slug}`}
+              title={course.title}
+              description={course.description}
+              meta={meta}
+              kind="course"
+            />
+            );
+          })}
         </div>
       )}
     </div>

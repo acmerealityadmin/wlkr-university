@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hasMinRole, canAccessUniversity, canAuthorContent } from '../src/lib/roles';
+import { hasMinRole, canAccessUniversity, canAuthorContent, canAssignTraining } from '../src/lib/roles';
 
 describe('hasMinRole', () => {
   it('accepts a role at or above the required rank', () => {
@@ -24,6 +24,22 @@ describe('canAccessUniversity', () => {
     expect(canAccessUniversity({ role: 'PORTAL_ADMIN' })).toBe(true);
     expect(canAccessUniversity({ role: 'STUDENT' })).toBe(false);
     expect(canAccessUniversity(null)).toBe(false);
+  });
+
+  it('treats district and school staff as educators', () => {
+    expect(canAccessUniversity({ role: 'DISTRICT_USER' })).toBe(true);
+    expect(canAccessUniversity({ role: 'SCHOOL_USER' })).toBe(true);
+  });
+});
+
+describe('canAssignTraining', () => {
+  it('allows platform and district admins, plus school/teacher ADMIN subtype', () => {
+    expect(canAssignTraining({ role: 'PORTAL_ADMIN' })).toBe(true);
+    expect(canAssignTraining({ role: 'DISTRICT_USER' })).toBe(true);
+    expect(canAssignTraining({ role: 'SCHOOL_USER', roleSubtype: 'ADMIN' })).toBe(true);
+    expect(canAssignTraining({ role: 'TEACHER', roleSubtype: 'ADMIN' })).toBe(true);
+    expect(canAssignTraining({ role: 'TEACHER', roleSubtype: 'NONE' })).toBe(false);
+    expect(canAssignTraining({ role: 'SCHOOL_USER', roleSubtype: 'NONE' })).toBe(false);
   });
 });
 

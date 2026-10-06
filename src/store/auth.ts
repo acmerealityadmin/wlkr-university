@@ -23,6 +23,7 @@ interface AuthState {
   biometricEnabled: boolean;
   biometricLabel: string;
   login: (email: string, password: string) => Promise<void>;
+  completeSamlLogin: (code: string) => Promise<void>;
   logout: () => Promise<void>;
   initialize: () => Promise<void>;
   setUser: (user: User) => void;
@@ -158,6 +159,22 @@ export const useAuth = create<AuthState>((set, get) => ({
     set({ isLoading: true });
     try {
       const data = await authApi.login(email, password);
+      if (!canAccessUniversity(data.user)) {
+        throw new Error('This portal requires an educator account.');
+      }
+      await setTokens(data.accessToken, data.refreshToken);
+      const withId = withUserId(data.user);
+      void cacheUser(withId);
+      set({ user: withId });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  completeSamlLogin: async (code) => {
+    set({ isLoading: true });
+    try {
+      const data = await authApi.samlExchange(code);
       if (!canAccessUniversity(data.user)) {
         throw new Error('This portal requires an educator account.');
       }

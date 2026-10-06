@@ -4,7 +4,9 @@ import { getAccessToken, getRefreshToken, setTokens, clearTokens } from '@/lib/t
 import type {
   AuthTokens, User, Course, CourseListItem, PublicCourse, Lesson, Quiz, QuizAttemptAnswer,
   QuizAttemptResult, Enrollment, CertificateListItem, PublicCertificate, Article,
-  PublicArticleListItem, PublicArticle, SearchResult, Pagination,
+  PublicArticleListItem, PublicArticle, SearchResult, Pagination, CalendarEvent, CalendarEventInput,
+  UniversityProfile, UniversityProfileInput, Webinar, WebinarAttendance, PublicWebinar,
+  TrainingAssignment, TrainingReport,
 } from '@/types/api';
 
 // `api`  → walkr-ecko-server (auth)
@@ -90,6 +92,18 @@ export const authApi = {
   logout: (refreshToken: string) =>
     api.post('/v1/auth/logout', { refreshToken }).then((r) => r.data),
   me: () => api.get<{ user: User }>('/v1/auth/me').then((r) => r.data),
+  locales: () =>
+    api.get<{ defaultLocale: string; locales: { code: string; name: string }[] }>('/v1/auth/locales').then((r) => r.data),
+  samlExchange: (code: string) =>
+    api.post<AuthTokens>('/v1/auth/saml/exchange', { code }).then((r) => r.data),
+  cleverStatus: () =>
+    api.get<{ enabled: boolean; districtId?: string }>('/v1/auth/clever/status').then((r) => r.data),
+  cleverLoginUrl: (returnTo: string, districtId?: string) => {
+    const base = getApiBaseUrl();
+    const params = new URLSearchParams({ returnTo });
+    if (districtId) params.set('district_id', districtId);
+    return `${base}/v1/auth/clever/login?${params}`;
+  },
 };
 
 // ════════════════════════════════════════════════════════════════════════
@@ -105,6 +119,17 @@ export const coursesApi = {
 export const lessonsApi = {
   listForCourse: (courseId: string) =>
     univ.get<{ lessons: Lesson[] }>('/lessons', { params: { courseId } }).then((r) => r.data),
+};
+
+export const practiceApi = {
+  get: (courseSlug: string) =>
+    univ.get<{ title: string; opening: string }>(`/practice/${courseSlug}`).then((r) => r.data),
+  send: (
+    courseSlug: string,
+    messages: { role: 'user' | 'assistant'; content: string; summary?: boolean }[],
+    summarize = false,
+  ) =>
+    univ.post<{ message: string }>(`/practice/${courseSlug}`, { messages, summarize }).then((r) => r.data),
 };
 
 export const quizzesApi = {
@@ -155,6 +180,55 @@ export const voiceApi = {
       .post<{ text: string }>('/voice/transcribe', form, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then((r) => r.data);
   },
+};
+
+export const calendarApi = {
+  list: (from: string, to: string) =>
+    univ
+      .get<{ from: string; to: string; events: CalendarEvent[] }>('/calendar', { params: { from, to } })
+      .then((r) => r.data),
+  create: (body: CalendarEventInput) =>
+    univ.post<{ event: CalendarEvent }>('/calendar', body).then((r) => r.data),
+  update: (id: string, body: Partial<CalendarEventInput>) =>
+    univ.patch<{ event: CalendarEvent }>(`/calendar/${id}`, body).then((r) => r.data),
+  remove: (id: string) => univ.delete<{ ok: true }>(`/calendar/${id}`).then((r) => r.data),
+};
+
+export const universityProfileApi = {
+  get: () => univ.get<{ user: User; profile: UniversityProfile }>('/profile').then((r) => r.data),
+  update: (body: UniversityProfileInput) =>
+    univ.patch<{ user: User; profile: UniversityProfile }>('/profile', body).then((r) => r.data),
+};
+
+export const webinarsApi = {
+  list: (params?: { kind?: string }) =>
+    univ.get<{ webinars: Array<Webinar & { attendance: Pick<WebinarAttendance, 'status' | 'minutesWatched'> | null }> }>(
+      '/webinars',
+      { params },
+    ).then((r) => r.data),
+  get: (idOrSlug: string) =>
+    univ.get<{ webinar: Webinar; attendance: WebinarAttendance | null }>(`/webinars/${idOrSlug}`).then((r) => r.data),
+  rsvp: (idOrSlug: string) =>
+    univ.post<{ webinar: Webinar; attendance: WebinarAttendance }>(`/webinars/${idOrSlug}/rsvp`).then((r) => r.data),
+  attend: (idOrSlug: string, minutesWatched?: number) =>
+    univ.post<{ webinar: Webinar; attendance: WebinarAttendance }>(`/webinars/${idOrSlug}/attend`, { minutesWatched }).then((r) => r.data),
+  downloadIcs: (idOrSlug: string) =>
+    univ.get<Blob>(`/webinars/${idOrSlug}/ics`, { responseType: 'blob' }).then((r) => r.data),
+};
+
+export const publicWebinarsApi = {
+  list: () => univ.get<{ webinars: PublicWebinar[] }>('/public/webinars').then((r) => r.data),
+};
+
+export const assignmentsApi = {
+  list: () =>
+    univ.get<{ assignments: TrainingAssignment[]; canAssign: boolean }>('/assignments').then((r) => r.data),
+  create: (body: { courseId: string; dueAt?: string | null; districtId?: string | null; schoolId?: string | null }) =>
+    univ.post<{ assignment: TrainingAssignment; enrolled: { created: number; reactivated: number; skipped: number } }>(
+      '/assignments',
+      body,
+    ).then((r) => r.data),
+  report: (id: string) => univ.get<TrainingReport>(`/assignments/${id}/report`).then((r) => r.data),
 };
 
 // ════════════════════════════════════════════════════════════════════════

@@ -5,11 +5,11 @@ import { useTranslations } from 'next-intl';
 import { Fingerprint } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ThemePicker } from '@/components/ui/theme-toggle';
 import { useAuth } from '@/store/auth';
 import { isNative } from '@/lib/capacitor';
 
-// Native-only settings. On web this page just doesn't render the
-// biometrics card (there's nothing else to configure yet).
+// Native-only biometric settings plus appearance for every surface.
 export default function SettingsPage() {
   const t = useTranslations('app.settings');
   const { biometricEnabled, biometricLabel, enableBiometrics, disableBiometrics, refreshBiometricAvailability } =
@@ -24,7 +24,15 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <h1 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('title')}</h1>
+      <Card className="max-w-md">
+        <CardHeader>
+          <CardTitle>{t('appearanceTitle')}</CardTitle>
+          <CardDescription>{t('appearanceDescription')}</CardDescription>
+        </CardHeader>
+        <div className="px-5 pb-5">
+          <ThemePicker />
+        </div>
+      </Card>
 
       {native && available && (
         <Card className="mt-6 max-w-md">

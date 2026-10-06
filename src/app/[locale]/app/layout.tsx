@@ -6,7 +6,7 @@ import { canAccessUniversity } from '@/lib/roles';
 import { useRouter, usePathname } from '@/i18n/navigation';
 import { PageSpinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
-import { AppHeader } from '@/components/layout/AppHeader';
+import { PortalShell } from '@/components/layout/PortalShell';
 import { useParams } from 'next/navigation';
 
 // Gated LMS shell — client-side auth gate with spinner, no middleware.ts
@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!isInitialized) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-gray-950">
         <PageSpinner />
       </div>
     );
@@ -42,7 +42,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (isLocked) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50 px-4 text-center dark:bg-gray-950">
         <p className="text-sm text-gray-500">Unlock WLKR University with {biometricLabel}</p>
         <Button onClick={() => unlockWithBiometrics()}>Unlock</Button>
       </div>
@@ -51,16 +51,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-gray-950">
         <PageSpinner />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader locale={locale} />
-      <main className="master-column animate-fade-in py-8">{children}</main>
-    </div>
+    <PortalShell variant="app" locale={locale}>
+      {children}
+    </PortalShell>
   );
 }

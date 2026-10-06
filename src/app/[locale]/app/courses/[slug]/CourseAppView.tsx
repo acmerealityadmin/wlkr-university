@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/button';
 import { PageSpinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
 import { coursesApi, lessonsApi, enrollmentsApi } from '@/lib/api';
+import { PracticeLinks } from '@/components/learning/PracticeLinks';
+import { enrollmentForSlug, readEnrolledSlugs, rememberEnrolledSlug } from '@/components/learning/CourseEntryCta';
+import { TrackBadge, hoursLabel } from '@/components/learning/TrackBadge';
 import type { CourseListItem, Lesson, Enrollment } from '@/types/api';
 
 export function CourseAppView({ slug }: { slug: string }) {
@@ -15,8 +18,13 @@ export function CourseAppView({ slug }: { slug: string }) {
   const [course, setCourse] = useState<CourseListItem | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
+  const [remembered, setRemembered] = useState(false);
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
+
+  useEffect(() => {
+    setRemembered(readEnrolledSlugs().has(slug));
+  }, [slug]);
 
   useEffect(() => {
     let cancelled = false;
@@ -37,11 +45,14 @@ export function CourseAppView({ slug }: { slug: string }) {
           ]);
           if (cancelled) return;
           setLessons(courseLessons);
-          const existing = enrollments.find((e) => {
-            const c = typeof e.courseId === 'string' ? e.courseId : e.courseId._id;
-            return c === found._id;
-          });
-          setEnrollment(existing ?? null);
+          const existing = enrollmentForSlug(enrollments, slug, found._id);
+          if (existing) {
+            rememberEnrolledSlug(slug);
+            setRemembered(true);
+            setEnrollment(existing);
+          } else {
+            setEnrollment(null);
+          }
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -58,6 +69,8 @@ export function CourseAppView({ slug }: { slug: string }) {
     setEnrolling(true);
     try {
       const { enrollment: created } = await enrollmentsApi.enroll(course._id);
+      rememberEnrolledSlug(slug);
+      setRemembered(true);
       setEnrollment(created);
     } catch {
       toast.error('Unable to enroll right now.');
@@ -67,14 +80,30 @@ export function CourseAppView({ slug }: { slug: string }) {
   };
 
   if (loading) return <PageSpinner />;
-  if (!course) return <p className="text-gray-500">Course not found.</p>;
+  if (!course) return <p className="text-muted-foreground">Course not found.</p>;
 
   return (
     <div>
-      <h1 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{course.title}</h1>
-      <p className="mt-2 max-w-2xl text-gray-600 dark:text-gray-300">{course.description}</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <TrackBadge track={course.track} />
+        {hoursLabel(course.hoursCredit) && (
+          <Badge variant="outline">{hoursLabel(course.hoursCredit)}</Badge>
+        )}
+        {enrollment?.required && <Badge variant="draft">{t('required')}</Badge>}
+      </div>
+      <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">{course.title}</h2>
+      <p className="mt-2 max-w-2xl text-sm text-gray-500 dark:text-gray-400">{course.description}</p>
+      {course.competencyLine && (
+        <p className="mt-2 max-w-2xl text-sm font-medium text-gray-700 dark:text-gray-300">{course.competencyLine}</p>
+      )}
+      {enrollment?.dueAt && (
+        <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">
+          {t('dueAt')}: {new Date(enrollment.dueAt).toLocaleDateString()}
+        </p>
+      )}
+      <PracticeLinks links={course.practiceLinks} title={t('practice')} />
 
-      {!enrollment ? (
+      {!enrollment && !remembered ? (
         <Button onClick={onEnroll} disabled={enrolling} className="mt-6">
           {t('enroll')}
         </Button>
@@ -84,23 +113,23 @@ export function CourseAppView({ slug }: { slug: string }) {
         </Badge>
       )}
 
-      {enrollment && (
+      {(enrollment || remembered) && (
         <>
-          <h2 className="mt-8 text-lg font-medium text-gray-900 dark:text-gray-100">{t('lessons')}</h2>
+          <h2 className="mt-10 text-lg font-semibold text-foreground">{t('lessons')}</h2>
           <ul className="mt-3 space-y-2">
             {lessons.map((lesson) => (
-              <li key={lesson.id}>
+              <li key={lesson.id || lesson._id || lesson.slug}>
                 <Link
                   href={`/app/courses/${slug}/lessons/${lesson.slug}`}
-                  className="block rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-sm hover:shadow-card-hover dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
+                  className="block rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800"
                 >
                   {lesson.title}
                 </Link>
               </li>
             ))}
           </ul>
-          <Button asChild variant="outline" className="mt-6">
-            <Link href={`/app/courses/${slug}/quiz`}>{t('takeQuiz')}</Link>
+          <Button asChild className="mt-6">
+            <Link href={`/app/courses/${slug}/understanding`}>{t('understanding')}</Link>
           </Button>
         </>
       )}

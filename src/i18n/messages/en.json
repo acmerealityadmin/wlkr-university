@@ -9,10 +9,44 @@
       "media": "Media",
       "login": "Log in",
       "dashboard": "Dashboard",
+      "calendar": "Calendar",
       "certificates": "Certificates",
+      "webinars": "Webinars",
+      "training": "Training",
       "logout": "Log out",
+      "profile": "Profile",
       "settings": "Settings"
     },
+    "navGroups": {
+      "overview": "Overview",
+      "catalog": "Catalog",
+      "learn": "Learn",
+      "account": "Account"
+    },
+    "pageTitles": {
+      "home": "Home",
+      "courses": "Courses",
+      "course": "Course",
+      "articles": "Articles",
+      "article": "Article",
+      "media": "Media",
+      "verify": "Certificate Verification",
+      "dashboard": "Dashboard",
+      "calendar": "Calendar",
+      "certificates": "Certificates",
+      "webinars": "Webinars",
+      "training": "Training",
+      "profile": "Profile",
+      "settings": "Settings",
+      "lesson": "Lesson",
+      "quiz": "Quiz",
+      "practiceChat": "Understanding",
+      "understanding": "Understanding"
+    },
+    "portalSubtitle": "University",
+    "brandShort": "WLKR",
+    "signOut": "Sign out",
+    "accountMenu": "Account menu",
     "footer": {
       "tagline": "Professional development for educators using the WLKR Learning System.",
       "rights": "All rights reserved."
@@ -25,7 +59,13 @@
       "openHint": "Press to search"
     },
     "loading": "Loading…",
-    "error": "Something went wrong."
+    "error": "Something went wrong.",
+    "theme": {
+      "toggle": "Toggle light and dark mode",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
   },
   "public": {
     "home": {
@@ -34,7 +74,7 @@
       "hero": {
         "eyebrow": "Educator Professional Development",
         "title": "Grow your practice with WLKR University",
-        "subtitle": "Courses, articles, and certificates built for educators using the WLKR Learning System — learn to teach with AI, at your own pace.",
+        "subtitle": "Courses, articles, webinars, and certificates built for educators using the WLKR Learning System — learn to teach with AI, at your own pace.",
         "cta": "Browse courses",
         "secondaryCta": "Read the latest articles"
       },
@@ -42,21 +82,46 @@
         "title": "Featured courses",
         "viewAll": "View all courses"
       },
+      "webinarsSection": {
+        "title": "Webinars & office hours",
+        "viewAll": "View all sessions"
+      },
       "articlesSection": {
         "title": "From the blog",
         "viewAll": "View all articles"
       },
       "cta": {
         "title": "Ready to start learning?",
+        "titleSignedIn": "Continue learning",
         "subtitle": "Log in with your WLKR account to enroll, take quizzes, and earn certificates.",
-        "button": "Log in to get started"
+        "subtitleSignedIn": "You're signed in — open your dashboard to enroll, take quizzes, and earn certificates.",
+        "button": "Log in to get started",
+        "buttonSignedIn": "Go to dashboard"
       }
     },
     "courses": {
       "title": "Courses",
       "description": "Professional development courses for educators using the WLKR Learning System.",
       "empty": "No courses are published yet — check back soon.",
-      "enrollCta": "Log in to enroll"
+      "enrollCta": "Log in to enroll",
+      "enrollCtaSignedIn": "Open this course",
+      "continueCta": "Continue"
+    },
+    "webinars": {
+      "title": "Webinars",
+      "description": "Live product sessions, office hours, and recordings for educators using WLKR.",
+      "upcoming": "Upcoming",
+      "recordings": "Recordings",
+      "emptyUpcoming": "No upcoming sessions are listed yet.",
+      "emptyPast": "No recordings yet.",
+      "recordingAvailable": "Recording available",
+      "loginCta": "Log in to RSVP and get the join link",
+      "loginCtaSignedIn": "Open this session",
+      "back": "All webinars",
+      "officeHours": "Office hours",
+      "webinar": "Webinar",
+      "watchRecording": "Watch the recording",
+      "relatedArticle": "Related article"
     },
     "articles": {
       "title": "Articles",
@@ -77,7 +142,9 @@
       "recipient": "Issued to",
       "course": "Course",
       "issuedAt": "Issued on",
-      "number": "Certificate number"
+      "number": "Certificate number",
+      "hours": "Clock hours",
+      "competency": "Competency"
     }
   },
   "auth": {
@@ -89,7 +156,14 @@
       "submit": "Sign in",
       "submitting": "Signing in…",
       "error": "Invalid email or password",
-      "requiresEducator": "This portal requires an educator account."
+      "requiresEducator": "This portal requires an educator account.",
+      "clever": "Log in with Clever",
+      "cleverRedirecting": "Redirecting…",
+      "orEmail": "or sign in with email",
+      "callbackWorking": "Completing district sign-in…",
+      "callbackFailed": "We could not complete district sign-in.",
+      "callbackMissing": "Missing login code",
+      "backToSignIn": "Back to sign in"
     }
   },
   "app": {
@@ -102,14 +176,54 @@
       "progress": "Progress",
       "statusActive": "In progress",
       "statusCompleted": "Completed",
-      "statusDropped": "Dropped"
+      "statusDropped": "Dropped",
+      "thisWeek": "This week",
+      "viewCalendar": "Open calendar",
+      "addEvent": "Add event",
+      "upcomingWebinars": "Upcoming webinars",
+      "viewWebinars": "All webinars",
+      "required": "Assigned"
+    },
+    "calendar": {
+      "addEvent": "Add event",
+      "editEvent": "Edit event",
+      "formHint": "These events are private to your educator account.",
+      "title": "Title",
+      "description": "Notes",
+      "kind": "Type",
+      "kinds": {
+        "personal": "Personal",
+        "session": "Session",
+        "deadline": "Deadline",
+        "course": "Course",
+        "webinar": "Webinar",
+        "office_hours": "Office hours"
+      },
+      "allDay": "All day",
+      "startsAt": "Starts",
+      "endsAt": "Ends",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "saveError": "Could not save this event.",
+      "deleteError": "Could not delete this event.",
+      "openLinked": "Open",
+      "noEventsDay": "None",
+      "today": "Today",
+      "prevMonth": "Previous month",
+      "nextMonth": "Next month"
     },
     "course": {
       "enroll": "Enroll in this course",
       "enrolled": "You're enrolled",
       "lessons": "Lessons",
       "takeQuiz": "Take the quiz",
-      "backToCourse": "Back to course"
+      "understanding": "Understanding",
+      "backToCourse": "Back to course",
+      "practice": "Practice in Ed Portal",
+      "required": "Required",
+      "dueAt": "Due"
     },
     "quiz": {
       "title": "Quiz",
@@ -120,7 +234,19 @@
       "score": "Score",
       "passingScore": "Passing score",
       "certificateEarned": "Congratulations — you've earned a certificate for this course!",
-      "viewCertificate": "View your certificate"
+      "viewCertificate": "View your certificate",
+      "practiceChat": "Practice with two articles"
+    },
+    "practice": {
+      "placeholder": "Ask about the article or a term…",
+      "send": "Send",
+      "sending": "Sending…",
+      "summarize": "Summarize my questions",
+      "summarizing": "Summarizing…",
+      "privacy": "Do not include student names, grades, or other private student information.",
+      "error": "Understanding is unavailable right now.",
+      "empty": "Understanding for this course is not available yet.",
+      "noQuestions": "Your questions about the article:\n\n- You did not ask any questions about the article."
     },
     "certificates": {
       "title": "My Certificates",
@@ -128,12 +254,132 @@
       "download": "Download PDF",
       "issuedOn": "Issued on"
     },
+    "webinars": {
+      "description": "RSVP to live sessions, add them to your calendar, and watch recordings.",
+      "upcoming": "Upcoming",
+      "past": "Recordings",
+      "emptyUpcoming": "No upcoming webinars yet.",
+      "emptyPast": "No recordings yet.",
+      "webinar": "Webinar",
+      "officeHours": "Office hours",
+      "back": "All webinars",
+      "notFound": "Webinar not found.",
+      "hostedBy": "Hosted by {name}",
+      "join": "Join link",
+      "joinNow": "Join now",
+      "rsvp": "RSVP",
+      "rsvpSaved": "You're on the list.",
+      "markAttended": "Mark attended",
+      "attendedSaved": "Attendance recorded.",
+      "addToCalendar": "Add to calendar",
+      "recording": "Recording",
+      "watchRecording": "Watch recording",
+      "slides": "Slides",
+      "relatedArticle": "Read the related article",
+      "actionError": "Could not complete that action.",
+      "status": {
+        "RSVP": "RSVP",
+        "ATTENDED": "Attended",
+        "NO_SHOW": "No show"
+      }
+    },
+    "training": {
+      "description": "Assign product training to teachers in your school or district and track completion.",
+      "forbidden": "Training assignment is available to school and district admins.",
+      "assignTitle": "Assign a course",
+      "course": "Course",
+      "dueAt": "Due date",
+      "noDue": "No due date",
+      "districtId": "District ID",
+      "schoolId": "School ID",
+      "assign": "Assign and enroll",
+      "assigning": "Assigning…",
+      "created": "Training assigned.",
+      "createError": "Could not assign training. Check the course and scope.",
+      "existing": "Assignments",
+      "empty": "No assignments yet.",
+      "reportTitle": "Completion: {title}",
+      "summary": "{completed} of {assigned} complete ({percent}%)",
+      "reportError": "Could not load the completion report.",
+      "colName": "Educator",
+      "colRole": "Role",
+      "colStatus": "Status",
+      "colProgress": "Progress"
+    },
     "settings": {
       "title": "Settings",
+      "appearanceTitle": "Appearance",
+      "appearanceDescription": "Choose a light theme, a dark theme, or match your device.",
       "biometricTitle": "{label}",
       "biometricDescription": "Use {label} to quickly unlock WLKR University on this device.",
       "enable": "Enable {label}",
       "disable": "Disable"
+    },
+    "profile": {
+      "personalTitle": "WLKR Learning Profile",
+      "personalDescription": "These details come from your WLKR Learning System account and are shared across WLKR.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "username": "Username",
+      "usernameRequired": "Username is required",
+      "primaryEmail": "Sign-in email",
+      "locale": "Language",
+      "primaryEmailHint": "Your sign-in email stays here. Add extra addresses below for University notifications.",
+      "ssoHint": "This account signs in with Clever or another district identity. There is no WLKR password to change.",
+      "passwordTitle": "Change password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "currentPasswordRequired": "Enter your current password to set a new one",
+      "passwordLength": "New password must be at least 8 characters",
+      "passwordMismatch": "New passwords do not match",
+      "contactTitle": "Contact",
+      "contactDescription": "Add a phone number and extra emails, then choose where notifications should go.",
+      "phone": "Phone number",
+      "phonePlaceholder": "For text notifications",
+      "extraEmails": "Email addresses",
+      "extraEmail": "Email",
+      "emailLabel": "Label",
+      "emailLabelPlaceholder": "Work, personal…",
+      "notifyPrimary": "Send notifications to {email}",
+      "notifyHere": "Notify here",
+      "addEmail": "Add another email",
+      "removeEmail": "Remove email",
+      "interestsTitle": "University interests",
+      "interestsDescription": "Choose topics and kinds of information you want to follow. Turn on Notify for any you want alerts about.",
+      "topicsTitle": "Topics",
+      "formatsTitle": "Types of information",
+      "notifyAboutThis": "Notify me about this",
+      "topics": {
+        "music_education": "Music education",
+        "history_facts": "History facts",
+        "math": "Math",
+        "language_arts": "Language arts",
+        "science": "Science",
+        "history": "History",
+        "technology": "Technology"
+      },
+      "formats": {
+        "articles": "Articles",
+        "videos": "Videos",
+        "webinars": "Webinars",
+        "conferences": "Conferences",
+        "other": "Other"
+      },
+      "otherNotes": "Other interests",
+      "otherNotesPlaceholder": "Anything else you’d like us to know",
+      "channelsTitle": "How to notify you",
+      "channelsDescription": "Pick one or more ways to receive updates for the interests you marked.",
+      "channelPush": "Push notifications (University app)",
+      "channelSms": "Text messages",
+      "channelEmail": "Email",
+      "channelsHint": "Text uses your phone number. Email uses the addresses marked Notify. Push is delivered in the WLKR University app when it is installed.",
+      "save": "Save profile",
+      "saving": "Saving…",
+      "saved": "Profile saved",
+      "savedPassword": "Profile and password updated",
+      "saveError": "Could not save your profile.",
+      "loadError": "Could not load your profile."
     }
   }
 }

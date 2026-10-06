@@ -36,11 +36,10 @@ function VerifyContent() {
   }, [code]);
 
   return (
-    <div className="master-column max-w-lg py-16 text-center">
-      <h1 className="font-heading text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-      <p className="mt-2 text-gray-500">{t('description')}</p>
+    <div className="max-w-lg">
+      <p className="text-sm text-gray-500">{t('description')}</p>
 
-      <div className="mt-8 rounded-2xl border border-gray-100 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+      <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
         {loading ? (
           <PageSpinner />
         ) : certificate ? (
@@ -49,25 +48,39 @@ function VerifyContent() {
             <p className="mt-3 font-medium text-emerald-700 dark:text-emerald-400">{t('valid')}</p>
             <dl className="mt-6 space-y-2 text-left text-sm">
               {certificate.recipientName && (
-                <div className="flex justify-between border-b border-gray-100 py-2 dark:border-gray-800">
-                  <dt className="text-gray-500">{t('recipient')}</dt>
-                  <dd className="font-medium text-gray-900 dark:text-gray-100">{certificate.recipientName}</dd>
+                <div className="flex justify-between border-b border-border py-2">
+                  <dt className="text-muted-foreground">{t('recipient')}</dt>
+                  <dd className="font-medium text-foreground">{certificate.recipientName}</dd>
                 </div>
               )}
               {certificate.courseTitle && (
-                <div className="flex justify-between border-b border-gray-100 py-2 dark:border-gray-800">
-                  <dt className="text-gray-500">{t('course')}</dt>
-                  <dd className="font-medium text-gray-900 dark:text-gray-100">{certificate.courseTitle}</dd>
+                <div className="flex justify-between border-b border-border py-2">
+                  <dt className="text-muted-foreground">{t('course')}</dt>
+                  <dd className="font-medium text-foreground">{certificate.courseTitle}</dd>
                 </div>
               )}
-              <div className="flex justify-between border-b border-gray-100 py-2 dark:border-gray-800">
-                <dt className="text-gray-500">{t('issuedAt')}</dt>
-                <dd className="font-medium text-gray-900 dark:text-gray-100">{formatDate(certificate.issuedAt)}</dd>
+              <div className="flex justify-between border-b border-border py-2">
+                <dt className="text-muted-foreground">{t('issuedAt')}</dt>
+                <dd className="font-medium text-foreground">{formatDate(certificate.issuedAt)}</dd>
               </div>
               <div className="flex justify-between py-2">
-                <dt className="text-gray-500">{t('number')}</dt>
-                <dd className="font-mono text-xs text-gray-900 dark:text-gray-100">{certificate.certificateNumber}</dd>
+                <dt className="text-muted-foreground">{t('number')}</dt>
+                <dd className="font-mono text-xs text-foreground">{certificate.certificateNumber}</dd>
               </div>
+              {!!certificate.hoursCredit && (
+                <div className="flex justify-between border-t border-border py-2">
+                  <dt className="text-muted-foreground">{t('hours')}</dt>
+                  <dd className="font-medium text-foreground">
+                    {certificate.hoursCredit === 1 ? '1' : String(certificate.hoursCredit)}
+                  </dd>
+                </div>
+              )}
+              {certificate.competencyLine && (
+                <div className="flex justify-between border-t border-border py-2">
+                  <dt className="text-muted-foreground">{t('competency')}</dt>
+                  <dd className="max-w-[60%] text-right font-medium text-foreground">{certificate.competencyLine}</dd>
+                </div>
+              )}
             </dl>
           </>
         ) : (

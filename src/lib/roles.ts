@@ -33,11 +33,13 @@ export function hasMinRole(userRole: string | undefined | null, requiredRole: Ec
   return userRank >= requiredRank;
 }
 
-/** Bundled access: any TEACHER+ WLKR account can use WLKR University. */
+/** Bundled access: TEACHER+ plus SIS staff roles treated as teacher-tier. */
 export function canAccessUniversity(
   user: { role?: string } | null | undefined,
 ): boolean {
-  return hasMinRole(user?.role, 'TEACHER');
+  const role = user?.role;
+  if (role === 'DISTRICT_USER' || role === 'SCHOOL_USER') return true;
+  return hasMinRole(role, 'TEACHER');
 }
 
 /** Course/lesson/quiz/article authoring — mirrors requireContentWrite() on
@@ -46,4 +48,14 @@ export function canAuthorContent(
   user: { role?: string } | null | undefined,
 ): boolean {
   return user?.role === 'ACME_CREATOR' || hasMinRole(user?.role, 'PORTAL_ADMIN');
+}
+
+/** District/school training assignment — mirrors canAssignTraining() on ecko. */
+export function canAssignTraining(
+  user: { role?: string; roleSubtype?: string | null } | null | undefined,
+): boolean {
+  if (!user?.role) return false;
+  if (user.role === 'SUPER_ADMIN' || user.role === 'PORTAL_ADMIN' || user.role === 'ACME_CREATOR') return true;
+  if (user.role === 'DISTRICT_USER') return true;
+  return (user.role === 'SCHOOL_USER' || user.role === 'TEACHER') && user.roleSubtype === 'ADMIN';
 }
