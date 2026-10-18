@@ -46,6 +46,30 @@ export interface PracticeLink {
   href: string;
 }
 
+export interface LessonAudio {
+  id: string;
+  url?: string;
+  title?: string;
+}
+
+export interface LessonVariant {
+  locale: string;
+  title: string;
+  body: string;
+  practiceLinks?: PracticeLink[];
+  mediaTitles?: { mediaId: string; title: string }[];
+  audio?: LessonAudio | null;
+}
+
+export interface LessonMedia {
+  id: string;
+  title: string;
+  type: 'IMAGE' | 'VIDEO' | 'AUDIO' | 'DOCUMENT';
+  mimeType?: string;
+  originalFilename?: string;
+  url?: string;
+}
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
@@ -74,6 +98,7 @@ export interface Course {
   competencyLine?: string;
   practiceLinks?: PracticeLink[];
   status: ContentStatus;
+  authCategory?: 'WLKR_PRIVATE' | 'WLKR_PUBLIC';
   order: number;
   createdAt: string;
   updatedAt: string;
@@ -98,6 +123,17 @@ export interface PublicCourse {
   practiceLinks?: PracticeLink[];
 }
 
+export interface LessonEdit {
+  at: string;
+  summary: string;
+}
+
+export interface LessonEditor {
+  userId: string;
+  name: string;
+  edits: LessonEdit[];
+}
+
 export interface Lesson {
   id?: string;
   _id?: string;
@@ -106,34 +142,66 @@ export interface Lesson {
   slug: string;
   body: string;
   order: number;
+  approxMinutes?: number | null;
   mediaIds?: string[];
+  media?: LessonMedia[];
   practiceLinks?: PracticeLink[];
+  sourceLocale?: string;
+  audio?: LessonAudio | null;
+  variants?: LessonVariant[];
+  editors?: LessonEditor[];
   status: ContentStatus;
   createdAt: string;
   updatedAt: string;
 }
 
+export interface QuizStimulus {
+  type: 'none' | 'image' | 'video' | 'text';
+  mediaId: string | null;
+  text: string;
+}
+
 export interface QuizQuestion {
+  kind?: 'choice' | 'essay';
   prompt: string;
+  stimulus?: QuizStimulus;
   choices: string[];
   points: number;
-  correctAnswerIndex?: number; // only present for writeGuard responses
+  allowText?: boolean;
+  allowAudio?: boolean;
+  correctAnswerIndex?: number; // only present for content authors
+}
+
+export interface QuizVariantQuestion {
+  prompt: string;
+  choices: string[];
+  stimulusText: string;
+}
+
+export interface QuizVariant {
+  locale: string;
+  title: string;
+  questions: QuizVariantQuestion[];
 }
 
 export interface Quiz {
   id: string;
   courseId: string;
   lessonId: string | null;
+  placement?: 'start' | 'after_lesson' | 'end';
   title: string;
   passingScorePercent: number;
   questions: QuizQuestion[];
+  variants?: QuizVariant[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface QuizAttemptAnswer {
   questionIndex: number;
-  selectedIndex: number;
+  selectedIndex?: number | null;
+  text?: string;
+  audioMediaId?: string | null;
 }
 
 export interface QuizAttemptResult {

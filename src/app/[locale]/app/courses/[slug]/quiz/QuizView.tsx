@@ -19,7 +19,7 @@ export function QuizView({ courseSlug }: { courseSlug: string }) {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const { courses } = await coursesApi.list({ limit: 100 });
+      const { courses } = await coursesApi.listCatalog();
       const course = courses.find((c) => c.slug === courseSlug);
       if (!course) {
         if (!cancelled) setQuiz(null);

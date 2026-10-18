@@ -10,6 +10,14 @@ import { practiceApi } from '@/lib/api';
 
 type ChatMessage = { role: 'assistant' | 'user'; content: string; summary?: boolean };
 
+function resultLines(summary: string) {
+  return summary
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => /^result:/i.test(line))
+    .map((line) => line.replace(/^result:\s*/i, ''));
+}
+
 export function PracticeChat({ courseSlug }: { courseSlug: string }) {
   const t = useTranslations('app.practice');
   const courseT = useTranslations('app.course');
@@ -17,6 +25,7 @@ export function PracticeChat({ courseSlug }: { courseSlug: string }) {
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
   const [summarizing, setSummarizing] = useState(false);
+  const [summary, setSummary] = useState<string | null>(null);
   const [error, setError] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const busy = sending || summarizing;
@@ -48,6 +57,7 @@ export function PracticeChat({ courseSlug }: { courseSlug: string }) {
     if (!content || !messages || busy) return;
     const next = [...conversation(), { role: 'user' as const, content }];
     setMessages(next);
+    setSummary(null);
     setDraft('');
     setSending(true);
     setError('');
@@ -66,16 +76,18 @@ export function PracticeChat({ courseSlug }: { courseSlug: string }) {
     const history = conversation();
     const asked = history.some((message) => message.role === 'user');
     if (!asked) {
-      setMessages([...history, { role: 'assistant', content: t('noQuestions'), summary: true }]);
+      setSummary('');
       return;
     }
     setSummarizing(true);
+    setSummary('');
     setError('');
     try {
       const data = await practiceApi.send(courseSlug, history.slice(1), true);
-      setMessages([...history, { role: 'assistant', content: data.message, summary: true }]);
+      setSummary(data.message);
     } catch {
       setError(t('error'));
+      setSummary(null);
     } finally {
       setSummarizing(false);
     }
@@ -84,8 +96,12 @@ export function PracticeChat({ courseSlug }: { courseSlug: string }) {
   if (messages === null) return <PageSpinner />;
   if (messages.length === 0) return <p className="text-sm text-gray-500">{t('empty')}</p>;
 
+  const prompts = conversation().filter((message) => message.role === 'user');
+  const results = summary ? resultLines(summary) : [];
+  const showSummary = summary !== null;
+
   return (
-    <div className="flex h-[calc(100dvh-8.5rem)] flex-col">
+    <div className="flex h-[calc(100dvh-6.5rem)] flex-col lg:h-[calc(100dvh-7.5rem)]">
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pe-1">
         <Link href={`/app/courses/${courseSlug}`} className="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
           ← {courseT('backToCourse')}
@@ -105,6 +121,34 @@ export function PracticeChat({ courseSlug }: { courseSlug: string }) {
         ))}
         <div ref={bottomRef} />
       </div>
+      {showSummary && (
+        <section className="mt-3 max-h-64 overflow-y-auto rounded-2xl border border-brand-200 bg-white px-4 py-3 dark:border-brand-800 dark:bg-gray-900">
+          <h2 className="font-heading text-base font-medium text-gray-900 dark:text-gray-100">{t('summaryTitle')}</h2>
+          {prompts.length === 0 ? (
+            <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{t('noQuestions')}</p>
+          ) : (
+            <ol className="mt-3 space-y-3">
+              {prompts.map((message, index) => (
+                <li key={index} className="text-sm leading-relaxed text-gray-800 dark:text-gray-100">
+                  <p>
+                    <span className="font-medium">{t('youAsked')}: </span>
+                    “{message.content}”
+                  </p>
+                  <p className="mt-1 text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">{t('result')}: </span>
+                    {results[index] || (summarizing ? t('resultPending') : '')}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          )}
+          {summary && results.length !== prompts.length && !summarizing && (
+            <div className="mt-3 border-t border-gray-100 pt-3 dark:border-gray-800">
+              <LessonBody body={summary} />
+            </div>
+          )}
+        </section>
+      )}
       <form onSubmit={onSubmit} className="mt-3 border-t border-gray-200 bg-slate-50 pt-3 dark:border-gray-800 dark:bg-gray-950">
         <label className="sr-only" htmlFor="understanding-prompt">{t('placeholder')}</label>
         <div className="flex items-end gap-2">
@@ -128,9 +172,15 @@ export function PracticeChat({ courseSlug }: { courseSlug: string }) {
         </div>
         <div className="mt-2 flex items-center justify-between gap-3">
           <p className="text-xs text-gray-500">{error || t('privacy')}</p>
-          <Button type="button" variant="outline" onClick={onSummarize} disabled={busy}>
-            {summarizing ? t('summarizing') : t('summarize')}
-          </Button>
+          {showSummary && !summarizing ? (
+            <Button type="button" variant="outline" onClick={() => setSummary(null)} disabled={busy}>
+              {t('askAnother')}
+            </Button>
+          ) : (
+            <Button type="button" onClick={onSummarize} disabled={busy}>
+              {summarizing ? t('summarizing') : t('done')}
+            </Button>
+          )}
         </div>
       </form>
     </div>

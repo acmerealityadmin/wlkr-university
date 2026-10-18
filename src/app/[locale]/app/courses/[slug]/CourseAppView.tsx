@@ -1,22 +1,79 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { PageSpinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
-import { coursesApi, lessonsApi, enrollmentsApi } from '@/lib/api';
+import { coursesApi, lessonsApi, enrollmentsApi, quizzesApi } from '@/lib/api';
 import { PracticeLinks } from '@/components/learning/PracticeLinks';
 import { enrollmentForSlug, readEnrolledSlugs, rememberEnrolledSlug } from '@/components/learning/CourseEntryCta';
 import { TrackBadge, hoursLabel } from '@/components/learning/TrackBadge';
-import type { CourseListItem, Lesson, Enrollment } from '@/types/api';
+import { localizeLesson, localizeQuiz } from '@/lib/localizedContent';
+import type { CourseListItem, Lesson, Enrollment, Quiz } from '@/types/api';
+
+function lessonKey(lesson: Lesson) {
+  return String(lesson.id || lesson._id || '');
+}
+
+function attachedQuizzes(lessonId: string, quizzes: Quiz[]) {
+  return quizzes.filter((quiz) => quiz.placement === 'after_lesson' && quiz.lessonId === lessonId);
+}
+
+function lessonTiming(lesson: Lesson, lessonCount: number, hoursCredit?: number | null) {
+  if (lesson.approxMinutes && lesson.approxMinutes > 0) {
+    return { minutes: lesson.approxMinutes, estimated: false };
+  }
+  const hours = Number(hoursCredit) || 0;
+  if (hours > 0 && lessonCount > 0) {
+    return { minutes: Math.max(1, Math.round((hours * 60) / lessonCount)), estimated: true };
+  }
+  return { minutes: null, estimated: false };
+}
+
+type OutlineRow =
+  | { key: string; kind: 'quiz'; title: string; href: string }
+  | { key: string; kind: 'lesson'; lesson: Lesson; href: string; quizzes: Quiz[]; minutes: number | null; estimated: boolean };
+
+function courseOutline(slug: string, lessons: Lesson[], quizzes: Quiz[], hoursCredit?: number | null): OutlineRow[] {
+  const ordered = [...lessons].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const knownIds = new Set(ordered.map(lessonKey).filter(Boolean));
+  const quizRow = (quiz: Quiz): OutlineRow => ({
+    key: `quiz-${quiz.id}`,
+    kind: 'quiz',
+    title: quiz.title,
+    href: `/app/courses/${slug}/quizzes?quiz=${quiz.id}`,
+  });
+  const rows: OutlineRow[] = [];
+  quizzes.filter((quiz) => quiz.placement === 'start').forEach((quiz) => rows.push(quizRow(quiz)));
+  for (const lesson of ordered) {
+    const id = lessonKey(lesson);
+    rows.push({
+      key: `lesson-${id || lesson.slug}`,
+      kind: 'lesson',
+      lesson,
+      href: `/app/courses/${slug}/lessons/${lesson.slug}`,
+      quizzes: attachedQuizzes(id, quizzes),
+      ...lessonTiming(lesson, ordered.length, hoursCredit),
+    });
+  }
+  quizzes
+    .filter((quiz) => quiz.placement !== 'start' && quiz.placement !== 'after_lesson')
+    .forEach((quiz) => rows.push(quizRow(quiz)));
+  quizzes
+    .filter((quiz) => quiz.placement === 'after_lesson' && !knownIds.has(String(quiz.lessonId || '')))
+    .forEach((quiz) => rows.push(quizRow(quiz)));
+  return rows;
+}
 
 export function CourseAppView({ slug }: { slug: string }) {
   const t = useTranslations('app.course');
+  const locale = useLocale();
   const [course, setCourse] = useState<CourseListItem | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
   const [remembered, setRemembered] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -34,17 +91,19 @@ export function CourseAppView({ slug }: { slug: string }) {
         // The authenticated detail endpoint is by Mongo id, not slug — the
         // list endpoint returns full lean docs (including _id), so filter
         // client-side. Fine at this catalog size.
-        const { courses } = await coursesApi.list({ limit: 100 });
+        const { courses } = await coursesApi.listCatalog();
         const found = courses.find((c) => c.slug === slug) ?? null;
         if (cancelled) return;
         setCourse(found);
         if (found) {
-          const [{ lessons: courseLessons }, { enrollments }] = await Promise.all([
+          const [{ lessons: courseLessons }, { enrollments }, { quizzes: courseQuizzes }] = await Promise.all([
             lessonsApi.listForCourse(found._id),
             enrollmentsApi.list(),
+            quizzesApi.listForCourse(found._id),
           ]);
           if (cancelled) return;
           setLessons(courseLessons);
+          setQuizzes(courseQuizzes);
           const existing = enrollmentForSlug(enrollments, slug, found._id);
           if (existing) {
             rememberEnrolledSlug(slug);
@@ -117,14 +176,21 @@ export function CourseAppView({ slug }: { slug: string }) {
         <>
           <h2 className="mt-10 text-lg font-semibold text-foreground">{t('lessons')}</h2>
           <ul className="mt-3 space-y-2">
-            {lessons.map((lesson) => (
-              <li key={lesson.id || lesson._id || lesson.slug}>
-                <Link
-                  href={`/app/courses/${slug}/lessons/${lesson.slug}`}
-                  className="block rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800"
-                >
-                  {lesson.title}
-                </Link>
+            {courseOutline(
+              slug,
+              lessons.map((lesson) => localizeLesson(lesson, locale)),
+              quizzes.map((quiz) => localizeQuiz(quiz, locale)),
+              course.hoursCredit,
+            ).map((item) => (
+              <li key={item.key} className="rounded-xl border border-gray-100 bg-white px-4 py-3 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                {item.kind === 'quiz' ? (
+                  <Link href={item.href} className="block text-sm font-medium text-gray-900 hover:underline dark:text-gray-100">
+                    <span className="me-2 text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">{t('quiz')}</span>
+                    {item.title}
+                  </Link>
+                ) : (
+                  <LessonRow slug={slug} item={item} />
+                )}
               </li>
             ))}
           </ul>
@@ -133,6 +199,49 @@ export function CourseAppView({ slug }: { slug: string }) {
           </Button>
         </>
       )}
+    </div>
+  );
+}
+
+function LessonRow({
+  slug,
+  item,
+}: {
+  slug: string;
+  item: Extract<OutlineRow, { kind: 'lesson' }>;
+}) {
+  const t = useTranslations('app.course');
+  const timeLabel = item.minutes == null
+    ? ''
+    : item.estimated
+      ? t('aboutMinutes', { count: item.minutes })
+      : t('minutes', { count: item.minutes });
+
+  if (!timeLabel && item.quizzes.length === 0) {
+    return (
+      <Link href={item.href} className="block text-sm font-medium text-gray-900 hover:underline dark:text-gray-100">
+        {item.lesson.title}
+      </Link>
+    );
+  }
+
+  return (
+    <div>
+      <Link href={item.href} className="block text-sm font-medium text-gray-900 hover:underline dark:text-gray-100">
+        {item.lesson.title}
+      </Link>
+      <p className="mt-1 text-xs font-normal text-gray-500 dark:text-gray-400">
+        {timeLabel}
+        {timeLabel && item.quizzes.length > 0 ? ' · ' : ''}
+        {item.quizzes.map((quiz, index) => (
+          <span key={quiz.id}>
+            {index > 0 ? ', ' : ''}
+            <Link href={`/app/courses/${slug}/quizzes?quiz=${quiz.id}`} className="hover:underline">
+              {t('quizNamed', { title: quiz.title })}
+            </Link>
+          </span>
+        ))}
+      </p>
     </div>
   );
 }

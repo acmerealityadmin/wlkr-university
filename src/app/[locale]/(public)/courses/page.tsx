@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { ContentCard, PageIntro } from '@/components/layout/ContentCard';
+import { PageIntro } from '@/components/layout/ContentCard';
+import { CourseCatalog } from '@/components/learning/CourseCatalog';
 import { publicCoursesApi } from '@/lib/api';
 import { hoursLabel } from '@/components/learning/TrackBadge';
 
@@ -26,27 +27,19 @@ export default async function CoursesPage({ params }: { params: Promise<{ locale
     <div>
       <PageIntro description={t('description')} />
 
-      {courses.length === 0 ? (
-        <p className="text-sm text-gray-500">{t('empty')}</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {courses.map((course) => {
-            const hours = hoursLabel(course.hoursCredit);
-            const track = course.track ? TRACK_META[course.track] : null;
-            const meta = [hours, track].filter(Boolean).join(' · ') || undefined;
-            return (
-            <ContentCard
-              key={course.slug}
-              href={`/courses/${course.slug}`}
-              title={course.title}
-              description={course.description}
-              meta={meta}
-              kind="course"
-            />
-            );
-          })}
-        </div>
-      )}
+      <CourseCatalog
+        empty={t('empty')}
+        courses={courses.map((course) => {
+          const hours = hoursLabel(course.hoursCredit);
+          const track = course.track ? TRACK_META[course.track] : null;
+          return {
+            slug: course.slug,
+            title: course.title,
+            description: course.description,
+            meta: [hours, track].filter(Boolean).join(' · ') || undefined,
+          };
+        })}
+      />
     </div>
   );
 }

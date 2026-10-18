@@ -113,6 +113,11 @@ export const authApi = {
 export const coursesApi = {
   list: (params?: Record<string, unknown>) =>
     univ.get<{ courses: CourseListItem[]; pagination: Pagination }>('/courses', { params }).then((r) => r.data),
+  /** Published courses only. Drafts stay in the admin portal. */
+  listCatalog: () =>
+    univ.get<{ courses: CourseListItem[]; pagination: Pagination }>('/courses', {
+      params: { limit: 100, status: 'PUBLISHED' },
+    }).then((r) => r.data),
   get: (id: string) => univ.get<{ course: Course }>(`/courses/${id}`).then((r) => r.data),
 };
 
@@ -137,6 +142,24 @@ export const quizzesApi = {
     univ.get<{ quizzes: Quiz[] }>('/quizzes', { params: { courseId } }).then((r) => r.data),
   submitAttempt: (quizId: string, answers: QuizAttemptAnswer[], responseTimeMs?: number) =>
     univ.post<QuizAttemptResult>(`/quizzes/${quizId}/attempts`, { answers, responseTimeMs }).then((r) => r.data),
+  uploadAnswerAudio: (quizId: string, blob: Blob) => {
+    const form = new FormData();
+    const type = blob.type || 'audio/webm';
+    const ext = type.includes('mp4') ? 'mp4' : type.includes('wav') ? 'wav' : 'webm';
+    form.append('file', blob, `answer.${ext}`);
+    return univ.post<{ mediaId: string }>(`/quizzes/${quizId}/answer-audio`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }).then((r) => r.data);
+  },
+};
+
+export function quizMediaFile(mediaId: string) {
+  return univ.get<Blob>(`/media/${mediaId}/file`, { responseType: 'blob' }).then((r) => r.data);
+}
+
+export const feedbackApi = {
+  create: (body: { courseId: string; lessonId?: string; body: string }) =>
+    univ.post<{ feedback: { id: string } }>('/feedback', body).then((r) => r.data),
 };
 
 export const enrollmentsApi = {
