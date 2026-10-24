@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { useAuth } from '@/store/auth';
 import { enrollmentsApi, webinarsApi } from '@/lib/api';
 import { DashboardWeekCalendar } from '@/components/calendar/DashboardWeekCalendar';
 import { hoursLabel } from '@/components/learning/TrackBadge';
+import { localizeCourse } from '@/lib/localizedContent';
 import type { Enrollment, Webinar } from '@/types/api';
 
 const STATUS_VARIANT: Record<Enrollment['status'], 'active' | 'completed' | 'dropped'> = {
@@ -27,6 +28,7 @@ const STATUS_LABEL_KEY: Record<Enrollment['status'], 'statusActive' | 'statusCom
 
 export default function DashboardPage() {
   const t = useTranslations('app.dashboard');
+  const locale = useLocale();
   const { user } = useAuth();
   const [enrollments, setEnrollments] = useState<Enrollment[] | null>(null);
   const [webinars, setWebinars] = useState<Webinar[]>([]);
@@ -89,8 +91,9 @@ export default function DashboardPage() {
       ) : (
         <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {enrollments.map((enrollment) => {
-            const course = typeof enrollment.courseId === 'string' ? null : enrollment.courseId;
-            if (!course) return null;
+            const loaded = typeof enrollment.courseId === 'string' ? null : enrollment.courseId;
+            if (!loaded) return null;
+            const course = localizeCourse(loaded, locale);
             return (
               <Link key={enrollment._id} href={`/app/courses/${course.slug}`} className="group block h-full">
                 <Card className="h-full transition-shadow group-hover:shadow-md">

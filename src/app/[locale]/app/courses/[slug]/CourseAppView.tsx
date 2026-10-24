@@ -11,7 +11,7 @@ import { coursesApi, lessonsApi, enrollmentsApi, quizzesApi } from '@/lib/api';
 import { PracticeLinks } from '@/components/learning/PracticeLinks';
 import { enrollmentForSlug, readEnrolledSlugs, rememberEnrolledSlug } from '@/components/learning/CourseEntryCta';
 import { TrackBadge, hoursLabel } from '@/components/learning/TrackBadge';
-import { localizeLesson, localizeQuiz } from '@/lib/localizedContent';
+import { localizeCourse, localizeLesson, localizeQuiz } from '@/lib/localizedContent';
 import type { CourseListItem, Lesson, Enrollment, Quiz } from '@/types/api';
 
 function lessonKey(lesson: Lesson) {
@@ -141,6 +141,8 @@ export function CourseAppView({ slug }: { slug: string }) {
   if (loading) return <PageSpinner />;
   if (!course) return <p className="text-muted-foreground">Course not found.</p>;
 
+  const shown = localizeCourse(course, locale);
+
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2">
@@ -150,17 +152,17 @@ export function CourseAppView({ slug }: { slug: string }) {
         )}
         {enrollment?.required && <Badge variant="draft">{t('required')}</Badge>}
       </div>
-      <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">{course.title}</h2>
-      <p className="mt-2 max-w-2xl text-sm text-gray-500 dark:text-gray-400">{course.description}</p>
-      {course.competencyLine && (
-        <p className="mt-2 max-w-2xl text-sm font-medium text-gray-700 dark:text-gray-300">{course.competencyLine}</p>
+      <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">{shown.title}</h2>
+      <p className="mt-2 max-w-2xl text-sm text-gray-500 dark:text-gray-400">{shown.description}</p>
+      {shown.competencyLine && (
+        <p className="mt-2 max-w-2xl text-sm font-medium text-gray-700 dark:text-gray-300">{shown.competencyLine}</p>
       )}
       {enrollment?.dueAt && (
         <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">
           {t('dueAt')}: {new Date(enrollment.dueAt).toLocaleDateString()}
         </p>
       )}
-      <PracticeLinks links={course.practiceLinks} title={t('practice')} />
+      <PracticeLinks links={shown.practiceLinks} title={t('practice')} />
 
       {!enrollment && !remembered ? (
         <Button onClick={onEnroll} disabled={enrolling} className="mt-6">

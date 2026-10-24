@@ -99,6 +99,13 @@ export interface Course {
   practiceLinks?: PracticeLink[];
   status: ContentStatus;
   authCategory?: 'WLKR_PRIVATE' | 'WLKR_PUBLIC';
+  variants?: {
+    locale: string;
+    title?: string;
+    description?: string;
+    competencyLine?: string;
+    practiceLinks?: PracticeLink[];
+  }[];
   order: number;
   createdAt: string;
   updatedAt: string;
@@ -227,6 +234,11 @@ export interface Enrollment {
     _id: string;
     title: string;
     slug: string;
+    description?: string;
+    competencyLine?: string;
+    practiceLinks?: PracticeLink[];
+    locale?: string;
+    variants?: Course['variants'];
     thumbnailMediaId: string | null;
     track?: CourseTrack;
     hoursCredit?: number;

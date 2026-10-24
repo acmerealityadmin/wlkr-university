@@ -1,5 +1,23 @@
 import type { Lesson, LessonMedia, Quiz, QuizQuestion } from '@/types/api';
 
+export function localizeCourse<T extends { locale?: string; title: string; description?: string; competencyLine?: string; practiceLinks?: { label: string; href: string }[]; variants?: { locale: string; title?: string; description?: string; competencyLine?: string; practiceLinks?: { label?: string; href?: string }[] }[] }>(course: T, locale: string): T {
+  const source = course.locale || 'en';
+  if (!locale || locale === source) return course;
+  const variant = (course.variants || []).find((row) => row.locale === locale);
+  if (!variant) return course;
+  const links = course.practiceLinks || [];
+  return {
+    ...course,
+    title: variant.title || course.title,
+    description: variant.description || course.description,
+    competencyLine: variant.competencyLine || course.competencyLine,
+    practiceLinks: links.map((link, index) => ({
+      href: link.href,
+      label: variant.practiceLinks?.[index]?.label || link.label,
+    })),
+  };
+}
+
 export function localizeLesson(lesson: Lesson, locale: string): Lesson {
   const source = lesson.sourceLocale || 'en';
   if (!locale || locale === source) return lesson;
