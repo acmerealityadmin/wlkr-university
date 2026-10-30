@@ -10,41 +10,41 @@
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 258 69% 50%;
+    --primary: 224 64% 33%;
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
-    --accent: 255 92% 95%;
-    --accent-foreground: 263 69% 42%;
-    --destructive: 347 77% 50%;
-    --border: 220 13% 95%;
-    --input: 220 13% 91%;
-    --ring: 258 90% 66%;
-    --radius: 0.75rem;
+    --accent: 214 95% 93%;
+    --accent-foreground: 224 64% 33%;
+    --destructive: 0 72% 51%;
+    --border: 214 32% 91%;
+    --input: 213 27% 84%;
+    --ring: 221 83% 53%;
+    --radius: 1.25rem;
     color-scheme: light;
   }
 
   .dark {
-    --background: 222 47% 4%;
+    --background: 222 47% 6%;
     --foreground: 210 40% 96%;
-    --card: 222 47% 6%;
+    --card: 222 44% 9%;
     --card-foreground: 210 40% 96%;
-    --popover: 222 47% 6%;
+    --popover: 222 44% 9%;
     --popover-foreground: 210 40% 96%;
-    --primary: 258 90% 76%;
-    --primary-foreground: 255 32% 12%;
-    --secondary: 217 33% 12%;
+    --primary: 221 91% 68%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 33% 15%;
     --secondary-foreground: 210 40% 96%;
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 16% 65%;
-    --accent: 255 45% 21%;
-    --accent-foreground: 255 92% 95%;
-    --destructive: 350 89% 72%;
-    --border: 217 33% 17%;
-    --input: 217 33% 22%;
-    --ring: 258 90% 76%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 224 50% 20%;
+    --accent-foreground: 214 95% 93%;
+    --destructive: 0 91% 71%;
+    --border: 217 33% 18%;
+    --input: 217 33% 24%;
+    --ring: 221 91% 68%;
     color-scheme: dark;
   }
 
@@ -54,19 +54,34 @@
 
   html {
     @apply scroll-smooth;
+    font-size: 106.25%;
+  }
+
+  @media (min-width: 1280px) {
+    html {
+      font-size: 112.5%;
+    }
   }
 
   body {
     @apply min-h-screen bg-background font-sans text-foreground antialiased;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-heading;
+    letter-spacing: -0.02em;
   }
 
   ::selection {
-    background: rgb(167 139 250 / 0.35);
+    background: rgb(147 180 253 / 0.4);
   }
 
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -84,6 +99,21 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+  }
+
+  .app-backdrop {
+    background:
+      radial-gradient(900px 420px at 100% -10%, rgb(219 230 254 / 0.65), transparent 60%),
+      radial-gradient(700px 380px at -10% 10%, rgb(241 245 249 / 0.9), transparent 60%),
+      radial-gradient(800px 500px at 50% 110%, rgb(254 243 199 / 0.45), transparent 60%),
+      hsl(var(--background));
+    background-attachment: fixed;
+  }
+
+  .dark .app-backdrop {
+    background:
+      radial-gradient(900px 420px at 100% -10%, rgb(30 58 138 / 0.3), transparent 60%),
+      hsl(var(--background));
   }
 }
 

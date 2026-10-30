@@ -69,7 +69,7 @@ export default function CalendarPage() {
                       : kind === 'course'
                         ? 'h-2 w-2 rounded-full bg-emerald-500'
                         : kind === 'webinar'
-                          ? 'h-2 w-2 rounded-full bg-violet-500'
+                          ? 'h-2 w-2 rounded-full bg-orange-500'
                           : 'h-2 w-2 rounded-full bg-amber-500'
               }
             />

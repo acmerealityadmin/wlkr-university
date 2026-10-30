@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ClipboardCheck } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Link } from '@/i18n/navigation';
@@ -19,7 +20,14 @@ function lessonKey(lesson: Lesson) {
 }
 
 function attachedQuizzes(lessonId: string, quizzes: Quiz[]) {
-  return quizzes.filter((quiz) => quiz.placement === 'after_lesson' && quiz.lessonId === lessonId);
+  if (!lessonId) return [];
+  return quizzes.filter((quiz) => quiz.placement === 'after_lesson' && String(quiz.lessonId || '') === lessonId);
+}
+
+function readingMinutes(body: string) {
+  const words = body.replace(/[#>*_`[\]()-]/g, ' ').split(/\s+/).filter(Boolean).length;
+  if (words === 0) return 5;
+  return Math.max(1, Math.min(240, Math.round(words / 180)));
 }
 
 function lessonTiming(lesson: Lesson, lessonCount: number, hoursCredit?: number | null) {
@@ -30,12 +38,12 @@ function lessonTiming(lesson: Lesson, lessonCount: number, hoursCredit?: number 
   if (hours > 0 && lessonCount > 0) {
     return { minutes: Math.max(1, Math.round((hours * 60) / lessonCount)), estimated: true };
   }
-  return { minutes: null, estimated: false };
+  return { minutes: readingMinutes(lesson.body || ''), estimated: true };
 }
 
 type OutlineRow =
   | { key: string; kind: 'quiz'; title: string; href: string }
-  | { key: string; kind: 'lesson'; lesson: Lesson; href: string; quizzes: Quiz[]; minutes: number | null; estimated: boolean };
+  | { key: string; kind: 'lesson'; lesson: Lesson; href: string; quizzes: Quiz[]; minutes: number; estimated: boolean };
 
 function courseOutline(slug: string, lessons: Lesson[], quizzes: Quiz[], hoursCredit?: number | null): OutlineRow[] {
   const ordered = [...lessons].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -152,51 +160,64 @@ export function CourseAppView({ slug }: { slug: string }) {
         )}
         {enrollment?.required && <Badge variant="draft">{t('required')}</Badge>}
       </div>
-      <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-100">{shown.title}</h2>
-      <p className="mt-2 max-w-2xl text-sm text-gray-500 dark:text-gray-400">{shown.description}</p>
+      <h2 className="mt-4 font-heading text-4xl font-semibold leading-tight text-gray-900 dark:text-gray-100">{shown.title}</h2>
+      <p className="mt-3 max-w-3xl text-lg leading-relaxed text-gray-600 dark:text-gray-300">{shown.description}</p>
       {shown.competencyLine && (
-        <p className="mt-2 max-w-2xl text-sm font-medium text-gray-700 dark:text-gray-300">{shown.competencyLine}</p>
+        <p className="mt-3 max-w-3xl text-base font-bold text-gray-700 dark:text-gray-200">{shown.competencyLine}</p>
       )}
       {enrollment?.dueAt && (
-        <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">
+        <p className="mt-3 text-base font-bold text-rose-600 dark:text-rose-300">
           {t('dueAt')}: {new Date(enrollment.dueAt).toLocaleDateString()}
         </p>
       )}
       <PracticeLinks links={shown.practiceLinks} title={t('practice')} />
 
       {!enrollment && !remembered ? (
-        <Button onClick={onEnroll} disabled={enrolling} className="mt-6">
+        <Button onClick={onEnroll} disabled={enrolling} size="lg" className="mt-8">
           {t('enroll')}
         </Button>
       ) : (
-        <Badge variant="active" className="mt-6">
+        <Badge variant="active" className="mt-8 px-4 py-1.5 text-base">
           {t('enrolled')}
         </Badge>
       )}
 
       {(enrollment || remembered) && (
         <>
-          <h2 className="mt-10 text-lg font-semibold text-foreground">{t('lessons')}</h2>
-          <ul className="mt-3 space-y-2">
+          <h2 className="mt-12 font-heading text-3xl font-semibold text-gray-900 dark:text-gray-100">{t('lessons')}</h2>
+          <ol className="mt-5 space-y-3">
             {courseOutline(
               slug,
               lessons.map((lesson) => localizeLesson(lesson, locale)),
               quizzes.map((quiz) => localizeQuiz(quiz, locale)),
               course.hoursCredit,
-            ).map((item) => (
-              <li key={item.key} className="rounded-xl border border-gray-100 bg-white px-4 py-3 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            ).map((item, index) => (
+              <li
+                key={item.key}
+                className="flex items-center gap-4 rounded-3xl border border-gray-100 bg-white px-5 py-4 shadow-soft transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lift dark:border-gray-800 dark:bg-gray-900"
+              >
                 {item.kind === 'quiz' ? (
-                  <Link href={item.href} className="block text-sm font-medium text-gray-900 hover:underline dark:text-gray-100">
-                    <span className="me-2 text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">{t('quiz')}</span>
-                    {item.title}
-                  </Link>
+                  <>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-300">
+                      <ClipboardCheck className="h-5 w-5" />
+                    </span>
+                    <Link href={item.href} className="min-w-0 flex-1 text-lg font-bold text-gray-900 hover:text-brand-700 dark:text-gray-100">
+                      <span className="me-2 rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold uppercase text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">{t('quiz')}</span>
+                      {item.title}
+                    </Link>
+                  </>
                 ) : (
-                  <LessonRow slug={slug} item={item} />
+                  <>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-100 font-heading text-lg font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-200">
+                      {index + 1}
+                    </span>
+                    <LessonRow slug={slug} item={item} />
+                  </>
                 )}
               </li>
             ))}
-          </ul>
-          <Button asChild className="mt-6">
+          </ol>
+          <Button asChild size="lg" className="mt-8">
             <Link href={`/app/courses/${slug}/understanding`}>{t('understanding')}</Link>
           </Button>
         </>
@@ -213,31 +234,20 @@ function LessonRow({
   item: Extract<OutlineRow, { kind: 'lesson' }>;
 }) {
   const t = useTranslations('app.course');
-  const timeLabel = item.minutes == null
-    ? ''
-    : item.estimated
-      ? t('aboutMinutes', { count: item.minutes })
-      : t('minutes', { count: item.minutes });
-
-  if (!timeLabel && item.quizzes.length === 0) {
-    return (
-      <Link href={item.href} className="block text-sm font-medium text-gray-900 hover:underline dark:text-gray-100">
-        {item.lesson.title}
-      </Link>
-    );
-  }
+  const timeLabel = item.estimated
+    ? t('aboutMinutes', { count: item.minutes })
+    : t('minutes', { count: item.minutes });
 
   return (
-    <div>
-      <Link href={item.href} className="block text-sm font-medium text-gray-900 hover:underline dark:text-gray-100">
+    <div className="min-w-0 flex-1">
+      <Link href={item.href} className="block text-lg font-bold text-gray-900 hover:text-brand-700 dark:text-gray-100 dark:hover:text-brand-200">
         {item.lesson.title}
       </Link>
-      <p className="mt-1 text-xs font-normal text-gray-500 dark:text-gray-400">
+      <p className="mt-0.5 text-sm font-normal text-gray-400 dark:text-gray-500">
         {timeLabel}
-        {timeLabel && item.quizzes.length > 0 ? ' · ' : ''}
         {item.quizzes.map((quiz, index) => (
           <span key={quiz.id}>
-            {index > 0 ? ', ' : ''}
+            {index === 0 ? ' · ' : ', '}
             <Link href={`/app/courses/${slug}/quizzes?quiz=${quiz.id}`} className="hover:underline">
               {t('quizNamed', { title: quiz.title })}
             </Link>

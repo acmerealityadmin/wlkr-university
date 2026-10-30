@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { toneFor } from '@/lib/tones';
 
 const VIEW_KEY = 'wlkr-university-courses-view';
 
@@ -17,11 +18,11 @@ export type CourseCatalogItem = {
   meta?: string;
 };
 
-function CourseHeading({ title }: { title: string }) {
+function CourseHeading({ title, slug }: { title: string; slug: string }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
-        <GraduationCap className="h-4 w-4" />
+    <div className="flex items-center gap-4">
+      <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl', toneFor(`/courses/${slug}`))}>
+        <GraduationCap className="h-6 w-6" />
       </div>
       <CardTitle>{title}</CardTitle>
     </div>
@@ -48,12 +49,12 @@ export function CourseCatalog({
     window.localStorage.setItem(VIEW_KEY, next);
   };
 
-  if (courses.length === 0) return <p className="text-sm text-gray-500">{empty}</p>;
+  if (courses.length === 0) return <p className="text-lg text-gray-500">{empty}</p>;
 
   return (
     <div>
-      <div className="mb-4 flex justify-end" role="group" aria-label={t('viewLabel')}>
-        <div className="inline-flex rounded-xl border border-gray-200 p-1 dark:border-gray-800">
+      <div className="mb-6 flex justify-end" role="group" aria-label={t('viewLabel')}>
+        <div className="inline-flex gap-1 rounded-full border-2 border-gray-100 bg-white p-1 shadow-soft dark:border-gray-800 dark:bg-gray-900">
           <Button
             type="button"
             size="sm"
@@ -77,21 +78,26 @@ export function CourseCatalog({
         </div>
       </div>
 
-      <div className={cn(view === 'cards' ? 'grid gap-4 sm:grid-cols-2 xl:grid-cols-3' : 'flex flex-col gap-3')}>
+      <div className={cn(view === 'cards' ? 'grid gap-6 sm:grid-cols-2 xl:grid-cols-3' : 'flex flex-col gap-4')}>
         {courses.map((course) => (
           <Link key={course.slug} href={`/courses/${course.slug}`} className="group block h-full">
-            <Card className="h-full transition-shadow group-hover:shadow-md">
+            <Card className="h-full">
               <CardHeader className={view === 'list' ? 'sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:space-y-0' : undefined}>
                 <div className="min-w-0 flex-1">
-                  <CourseHeading title={course.title} />
+                  <CourseHeading title={course.title} slug={course.slug} />
                   {course.description && (
-                    <CardDescription className={cn('mt-2', view === 'cards' ? 'line-clamp-3' : 'line-clamp-2')}>
+                    <CardDescription className={cn('mt-3', view === 'cards' ? 'line-clamp-3' : 'line-clamp-2')}>
                       {course.description}
                     </CardDescription>
                   )}
                 </div>
                 {course.meta && (
-                  <p className={cn('text-xs text-gray-400', view === 'list' ? 'sm:shrink-0 sm:pt-0' : 'pt-1')}>
+                  <p
+                    className={cn(
+                      'inline-flex w-fit rounded-full bg-gray-100 px-3 py-1 text-sm font-bold text-gray-500 dark:bg-gray-800 dark:text-gray-300',
+                      view === 'list' ? 'sm:shrink-0' : 'mt-2',
+                    )}
+                  >
                     {course.meta}
                   </p>
                 )}

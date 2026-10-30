@@ -13,7 +13,7 @@ function ThemeStatusBar() {
     if (!isNative() || !resolvedTheme) return;
     const isDark = resolvedTheme === 'dark';
     void StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light }).catch(() => undefined);
-    void StatusBar.setBackgroundColor({ color: isDark ? '#0b0914' : '#f7f5fb' }).catch(() => undefined);
+    void StatusBar.setBackgroundColor({ color: isDark ? '#0b0914' : '#fbfaff' }).catch(() => undefined);
   }, [resolvedTheme]);
 
   return null;
@@ -21,7 +21,7 @@ function ThemeStatusBar() {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
       <ThemeStatusBar />
       {children}
       <Toaster
@@ -29,7 +29,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         position="top-right"
         toastOptions={{
           classNames: {
-            toast: 'rounded-xl font-sans text-sm',
+            toast: 'rounded-2xl font-sans text-base',
           },
         }}
       />

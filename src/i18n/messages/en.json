@@ -2,6 +2,11 @@
   "common": {
     "languageName": "English",
     "siteName": "WLKR University",
+    "cardAction": {
+      "open": "Open",
+      "read": "Read",
+      "continue": "Continue"
+    },
     "nav": {
       "home": "Home",
       "courses": "Courses",
@@ -15,20 +20,27 @@
       "training": "Training",
       "logout": "Log out",
       "profile": "Profile",
-      "settings": "Settings"
+      "settings": "Settings",
+      "createAccount": "Create account",
+      "blog": "Blog",
+      "exploreWebinars": "Webinars",
+      "exploreWlkrLearning": "WLKR Learning",
+      "exploreMediaLibrary": "Media Library",
+      "exploreAnalytics": "Analytics"
     },
     "navGroups": {
       "overview": "Overview",
       "catalog": "Catalog",
       "learn": "Learn",
-      "account": "Account"
+      "account": "Account",
+      "explore": "Explore"
     },
     "pageTitles": {
       "home": "Home",
       "courses": "Courses",
       "course": "Course",
-      "articles": "Articles",
-      "article": "Article",
+      "articles": "Blog",
+      "article": "Post",
       "media": "Media",
       "verify": "Certificate Verification",
       "dashboard": "Dashboard",
@@ -127,10 +139,24 @@
       "relatedArticle": "Related article"
     },
     "articles": {
-      "title": "Articles",
-      "description": "Guidance and ideas for educators teaching with AI and the WLKR Learning System.",
-      "empty": "No articles are published yet — check back soon.",
-      "readMore": "Read more"
+      "title": "Blog",
+      "description": "Ideas, how-tos, and news for educators using the WLKR Learning System.",
+      "heroEyebrow": "WLKR University",
+      "heroTitle": "From the blog",
+      "heroSubtitle": "Search posts on WLKR Learning, AI, critical thinking, decision making, and professional development.",
+      "searchPlaceholder": "Search posts",
+      "allCategories": "All",
+      "empty": "No posts are published yet — check back soon.",
+      "emptyFiltered": "No posts match that search.",
+      "readMore": "Read post",
+      "back": "All posts",
+      "categories": {
+        "wlkr-learning": "WLKR Learning",
+        "ai": "AI",
+        "critical-thinking": "Critical Thinking",
+        "decision-making": "Decision Making",
+        "professional-development": "Professional Development"
+      }
     },
     "media": {
       "title": "Media",
@@ -148,25 +174,326 @@
       "number": "Certificate number",
       "hours": "Clock hours",
       "competency": "Competency"
+    },
+    "landing": {
+      "hero": {
+        "subtitle": "Professional development for K-12 educators teaching with the WLKR Learning System. Courses, live sessions, and certificates you can finish at your own pace.",
+        "cta": "Get started free",
+        "secondaryCta": "Read the blog"
+      },
+      "info": {
+        "title": "Explore the University",
+        "subtitle": "See what's waiting for you inside WLKR University.",
+        "learnMore": "Learn more",
+        "webinars": {
+          "title": "Webinars",
+          "body": "Live sessions and office hours with the WLKR team, plus recordings you can watch any time."
+        },
+        "wlkrLearning": {
+          "title": "Access WLKR Learning",
+          "body": "Bring the WLKR adventure game into your classroom, where students build critical thinking and AI skills."
+        },
+        "mediaLibrary": {
+          "title": "Media Library",
+          "body": "Videos, slide decks, and printable guides for staff meetings and lessons."
+        },
+        "analytics": {
+          "title": "Analytics Dashboard",
+          "body": "See how your students are growing, with clear class views and skill-by-skill progress."
+        }
+      },
+      "blog": {
+        "title": "From the blog",
+        "subtitle": "Ideas, how-tos, and news for educators.",
+        "eyebrow": "Article",
+        "read": "Read post",
+        "viewAll": "View all posts"
+      },
+      "fallback": {
+        "eyebrow": "WLKR Learning",
+        "articles": {
+          "title": "Teaching with AI",
+          "body": "Plain-language articles on using AI well in grades 3–8, with examples you can try this week.",
+          "link": "Browse articles"
+        },
+        "schools": {
+          "title": "For schools & districts",
+          "body": "Bring WLKR to your whole school with rostering, reporting, and training for every teacher.",
+          "link": "Learn about WLKR for schools"
+        },
+        "about": {
+          "title": "About WLKR",
+          "body": "WLKR is an adventure game that teaches critical thinking and AI prompting to students ages 8–12.",
+          "link": "Meet WLKR"
+        },
+        "help": {
+          "title": "Need a hand?",
+          "body": "Questions about your account, rosters, or getting started? Our team is happy to help.",
+          "link": "Contact us"
+        }
+      },
+      "footer": {
+        "tagline": "Professional development for educators using the WLKR Learning System.",
+        "educators": "Educators",
+        "wlkr": "WLKR Learning",
+        "verify": "Verify a certificate",
+        "about": "About WLKR",
+        "schools": "For schools",
+        "contact": "Contact us",
+        "rights": "All rights reserved.",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "explore": "Explore",
+        "blog": "Blog"
+      }
+    },
+    "signup": {
+      "metaTitle": "Create your account",
+      "hero": {
+        "eyebrow": "Join WLKR University",
+        "title": "Choose the plan that fits your classroom",
+        "subtitle": "Start free and upgrade any time. Every plan includes the WLKR Learning System PD library built for K-12 educators."
+      },
+      "billing": {
+        "label": "Billing period",
+        "monthly": "Monthly",
+        "annual": "Annual",
+        "save": "Save 2 months"
+      },
+      "popular": "Most popular",
+      "forever": "forever",
+      "perMonth": "/ month",
+      "perYear": "/ year",
+      "plans": {
+        "educator": {
+          "name": "Educator",
+          "tagline": "Get to know WLKR and teaching with AI.",
+          "cta": "Start for free",
+          "features": [
+            "Intro courses and quizzes",
+            "Articles and media library",
+            "Webinar recordings",
+            "Community office hours"
+          ]
+        },
+        "pro": {
+          "name": "Educator Pro",
+          "tagline": "Everything a teacher needs to present WLKR Learning.",
+          "cta": "Choose Pro",
+          "features": [
+            "Everything in Educator",
+            "Full course catalog with quizzes",
+            "Access WLKR Learning",
+            "Understanding practice chats with Ecko",
+            "WLKR Media Library"
+          ]
+        },
+        "classroom": {
+          "name": "Educator Classroom",
+          "tagline": "For teachers bringing WLKR to their whole classroom.",
+          "cta": "Choose Classroom",
+          "features": [
+            "Everything in Educator Pro",
+            "Classroom lesson kits and printables",
+            "Assign activities to students",
+            "Advanced Student Analytics",
+            "Priority support"
+          ]
+        },
+        "district": {
+          "name": "WLKR Learning",
+          "tagline": "Bring WLKR to your whole school or district, with rollout support from our team.",
+          "cta": "Book a demo",
+          "features": [
+            "Everything in Educator Classroom for every teacher",
+            "Unlimited students across schools",
+            "Clever and SIS rostering",
+            "District and school reporting dashboards",
+            "Onboarding and professional development for staff",
+            "Dedicated success manager"
+          ]
+        }
+      },
+      "form": {
+        "selected": "Selected plan: {plan}",
+        "title": "Create your account",
+        "billingNote": "Paid plans aren't billed yet. Your account starts on the free Educator plan, and we'll email you when upgrading opens.",
+        "email": "Email",
+        "username": "Username",
+        "password": "Password",
+        "confirm": "Confirm password",
+        "agree": "I'm an adult educator and I agree to the",
+        "terms": "Terms",
+        "and": "and",
+        "privacy": "Privacy Policy",
+        "submit": "Create account",
+        "submitting": "Creating your account…",
+        "haveAccount": "Already have an account?",
+        "login": "Log in",
+        "signedIn": "You're already signed in.",
+        "toDashboard": "Go to your dashboard",
+        "successFree": "Welcome to WLKR University!",
+        "successPaid": "Welcome! You're on the free Educator plan for now. We'll let you know when {plan} opens.",
+        "error": "We couldn't create your account. Please try again."
+      },
+      "enterprise": "Schools & districts",
+      "custom": "Custom",
+      "customNote": "pricing"
+    },
+    "explore": {
+      "createAccount": "Create your free account",
+      "login": "Log in",
+      "includedIn": "Included in",
+      "seePlans": "Compare plans",
+      "moreTitle": "Keep exploring",
+      "names": {
+        "webinars": "Webinars",
+        "wlkrLearning": "Access WLKR Learning",
+        "mediaLibrary": "Media Library",
+        "analytics": "Analytics Dashboard"
+      },
+      "webinars": {
+        "eyebrow": "Webinars & office hours",
+        "title": "Learn live with the WLKR team",
+        "subtitle": "Join short, practical sessions on teaching with AI and running WLKR, or catch up on recordings whenever it suits your schedule.",
+        "featuresTitle": "What you'll find",
+        "features": [
+          {
+            "title": "Live sessions",
+            "body": "Monthly walkthroughs of new WLKR features, classroom routines, and teaching with AI."
+          },
+          {
+            "title": "On your schedule",
+            "body": "Every session is recorded, so you can watch on your own time and pause when you need to."
+          },
+          {
+            "title": "Office hours",
+            "body": "Bring your questions about rosters, School Hub, or Ecko and get answers from the team."
+          }
+        ],
+        "detailTitle": "Built for busy teachers",
+        "detailBody": "Sessions are short and focused, so you leave with something you can use in class the next day.",
+        "points": [
+          "Most sessions run 30–45 minutes",
+          "Recordings and slides posted afterwards",
+          "Add sessions to your University calendar",
+          "Common questions become new articles"
+        ],
+        "plan": "Educator (free)",
+        "planNote": "Recordings are included with every account. Live sessions and office hours are open to all members."
+      },
+      "wlkrLearning": {
+        "eyebrow": "The WLKR Learning System",
+        "title": "Bring the WLKR adventure to your class",
+        "subtitle": "WLKR is a 3D adventure game for grades 3–8 where students team up with Ecko to practice critical thinking and learn to write good AI prompts.",
+        "featuresTitle": "How it works in your classroom",
+        "features": [
+          {
+            "title": "A game students love",
+            "body": "Students explore a colorful low-poly world, solve challenges, and earn bonuses along the way."
+          },
+          {
+            "title": "Guided by Ecko",
+            "body": "Ecko, the friendly robot guide, coaches students as they ask questions and refine their thinking."
+          },
+          {
+            "title": "Ready to present",
+            "body": "Teacher guides and walkthroughs help you introduce WLKR and run sessions with confidence."
+          }
+        ],
+        "detailTitle": "Everything you need to present WLKR",
+        "detailBody": "Educator Pro gives you access to WLKR Learning along with the courses that show you how to teach with it.",
+        "points": [
+          "Step-by-step setup and launch guides",
+          "Full course catalog on teaching with WLKR",
+          "Understanding practice chats with Ecko",
+          "Works on Mac, Windows, iPad, and the web"
+        ],
+        "plan": "Educator Pro",
+        "planNote": "Access WLKR Learning, the full course catalog, and the Media Library for $4.99 a month."
+      },
+      "mediaLibrary": {
+        "eyebrow": "WLKR Media Library",
+        "title": "Ready-made resources for every lesson",
+        "subtitle": "Find videos, slide decks, and printable guides to introduce WLKR, explain AI to students, and share with colleagues.",
+        "featuresTitle": "What's in the library",
+        "features": [
+          {
+            "title": "Videos",
+            "body": "Short explainers and classroom walkthroughs you can play for your class or your staff."
+          },
+          {
+            "title": "Slides and printables",
+            "body": "Lesson slides, handouts, and quick-reference cards you can download and adapt."
+          },
+          {
+            "title": "Easy to find",
+            "body": "Search by topic or grade, or browse collections organized by course."
+          }
+        ],
+        "detailTitle": "Save hours of prep",
+        "detailBody": "Every resource is made for WLKR classrooms, so it fits your lessons without extra work.",
+        "points": [
+          "New resources added every term",
+          "Organized by topic, course, and grade band",
+          "Download for offline use",
+          "Great for staff meetings and parent nights"
+        ],
+        "plan": "Educator Pro",
+        "planNote": "The full Media Library is included with Educator Pro and Educator Classroom."
+      },
+      "analytics": {
+        "eyebrow": "Analytics Dashboard",
+        "title": "See every student's progress at a glance",
+        "subtitle": "Understand how your class is growing in critical thinking and AI skills, and spot who needs a little extra help.",
+        "featuresTitle": "What the dashboard shows",
+        "features": [
+          {
+            "title": "Class overview",
+            "body": "A clear picture of your whole class: activity, progress, and the skills students are building."
+          },
+          {
+            "title": "Skill-by-skill growth",
+            "body": "Track progress over time for each student, with trends that make conferences easier."
+          },
+          {
+            "title": "Private to your classroom",
+            "body": "Student results are only shown to you and the staff your school has authorized."
+          }
+        ],
+        "detailTitle": "Insights you can act on",
+        "detailBody": "Advanced Student Analytics turns WLKR play into simple, teacher-friendly reports.",
+        "points": [
+          "Class and individual student views",
+          "Progress trends over the term",
+          "Highlights students who may need support",
+          "Assign activities and track completion"
+        ],
+        "plan": "Educator Classroom",
+        "planNote": "Advanced Student Analytics and activity assignment are included with Educator Classroom for $9.99 a month."
+      }
     }
   },
   "auth": {
     "login": {
       "title": "Sign in",
       "subtitle": "For educators using the WLKR Learning System",
-      "email": "Email address",
+      "email": "Username or email",
+      "identifierPlaceholder": "username or you@example.com",
       "password": "Password",
       "submit": "Sign in",
       "submitting": "Signing in…",
-      "error": "Invalid email or password",
+      "error": "Invalid username, email, or password",
       "requiresEducator": "This portal requires an educator account.",
       "clever": "Log in with Clever",
       "cleverRedirecting": "Redirecting…",
-      "orEmail": "or sign in with email",
+      "orEmail": "or sign in with username or email",
       "callbackWorking": "Completing district sign-in…",
       "callbackFailed": "We could not complete district sign-in.",
       "callbackMissing": "Missing login code",
-      "backToSignIn": "Back to sign in"
+      "backToSignIn": "Back to sign in",
+      "noAccount": "New here?",
+      "createAccount": "Create an account"
     }
   },
   "app": {

@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!isInitialized) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-gray-950">
+      <div className="app-backdrop flex min-h-screen items-center justify-center">
         <PageSpinner />
       </div>
     );
@@ -42,7 +42,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (isLocked) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50 px-4 text-center dark:bg-gray-950">
+      <div className="app-backdrop flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-sm text-gray-500">Unlock WLKR University with {biometricLabel}</p>
         <Button onClick={() => unlockWithBiometrics()}>Unlock</Button>
       </div>
@@ -51,7 +51,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-gray-950">
+      <div className="app-backdrop flex min-h-screen items-center justify-center">
         <PageSpinner />
       </div>
     );

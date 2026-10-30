@@ -46,7 +46,7 @@ export function PortalHeader({
   const title = pageTitle(pathname, t);
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-gray-100 bg-white/90 px-5 backdrop-blur-md dark:border-gray-800/60 dark:bg-gray-950/90 lg:px-6">
+    <header className="sticky top-0 z-20 flex h-20 items-center gap-4 border-b border-white/60 bg-white/70 px-5 backdrop-blur-xl dark:border-gray-800/60 dark:bg-gray-950/80 lg:px-10">
       <Button
         variant="ghost"
         size="icon"
@@ -54,11 +54,11 @@ export function PortalHeader({
         onClick={onMenuClick}
         aria-label="Open menu"
       >
-        <Menu className="h-5 w-5" />
+        <Menu className="h-6 w-6" />
       </Button>
 
       <div className="flex min-w-0 flex-1 items-center gap-3">
-        <h1 className="truncate font-heading text-xl font-medium tracking-tight text-gray-900 dark:text-white md:text-2xl">
+        <h1 className="truncate font-heading text-2xl font-semibold text-gray-900 dark:text-white md:text-3xl">
           {title}
         </h1>
       </div>

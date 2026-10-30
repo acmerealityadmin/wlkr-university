@@ -54,49 +54,49 @@ export function UserMenu() {
         aria-expanded={open}
         aria-label={t('accountMenu')}
         onClick={() => setOpen((value) => !value)}
-        className="ml-1 flex items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 px-2 py-1.5 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800"
+        className="ml-1 flex items-center gap-2 rounded-full border-2 border-gray-100 bg-white py-1 pe-3 ps-1 shadow-soft transition-colors hover:border-brand-200 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-brand-500/40"
       >
         {user.avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.avatarUrl} alt="" className="h-6 w-6 shrink-0 rounded-full object-cover" />
+          <img src={user.avatarUrl} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
         ) : (
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-[10px] font-bold text-white">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-extrabold text-white">
             {getInitials(label)}
           </div>
         )}
-        <span className="hidden max-w-[120px] truncate text-xs font-medium text-gray-700 sm:block dark:text-gray-300">
+        <span className="hidden max-w-[140px] truncate text-sm font-bold text-gray-700 sm:block dark:text-gray-200">
           {label}
         </span>
         <ChevronDown
-          className={cn('h-3.5 w-3.5 shrink-0 text-gray-400 transition-transform', open && 'rotate-180')}
+          className={cn('h-4 w-4 shrink-0 text-gray-400 transition-transform', open && 'rotate-180')}
         />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute end-0 top-[calc(100%+8px)] z-50 w-56 rounded-xl border border-gray-100 bg-white p-1 shadow-lg dark:border-gray-800 dark:bg-gray-950"
+          className="absolute end-0 top-[calc(100%+10px)] z-50 w-64 rounded-3xl border border-gray-100 bg-white p-2 shadow-lift dark:border-gray-800 dark:bg-gray-950"
         >
-          <div className="border-b border-gray-100 px-3 py-2 dark:border-gray-800">
-            <p className="truncate text-sm font-medium text-gray-900 dark:text-white">{label}</p>
-            <p className="truncate text-xs text-gray-400">{user.email}</p>
+          <div className="mb-1 rounded-2xl bg-gray-50 px-4 py-3 dark:bg-gray-900">
+            <p className="truncate text-base font-bold text-gray-900 dark:text-white">{label}</p>
+            <p className="truncate text-sm text-gray-400">{user.email}</p>
           </div>
           <Link
             href="/app/profile"
             role="menuitem"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 no-underline transition-colors hover:bg-gray-50 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800/80 dark:hover:text-white"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-bold text-gray-700 no-underline transition-colors hover:bg-brand-50 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-gray-800/80 dark:hover:text-white"
           >
-            <UserRound className="h-4 w-4 text-gray-400" />
+            <UserRound className="h-5 w-5 text-brand-400" />
             {t('nav.profile')}
           </Link>
           <button
             type="button"
             role="menuitem"
             onClick={() => void onLogout()}
-            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-rose-600 transition-colors hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
+            className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-base font-bold text-rose-600 transition-colors hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-5 w-5" />
             {t('nav.logout')}
           </button>
         </div>

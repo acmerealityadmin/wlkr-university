@@ -149,7 +149,7 @@ export function PracticeChat({ courseSlug }: { courseSlug: string }) {
           )}
         </section>
       )}
-      <form onSubmit={onSubmit} className="mt-3 border-t border-gray-200 bg-slate-50 pt-3 dark:border-gray-800 dark:bg-gray-950">
+      <form onSubmit={onSubmit} className="mt-3 border-t border-gray-100 bg-white pt-3 dark:border-gray-800 dark:bg-gray-900">
         <label className="sr-only" htmlFor="understanding-prompt">{t('placeholder')}</label>
         <div className="flex items-end gap-2">
           <textarea

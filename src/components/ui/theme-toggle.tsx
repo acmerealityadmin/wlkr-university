@@ -15,7 +15,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    return <span className={cn('inline-flex h-9 w-9', className)} aria-hidden />;
+    return <span className={cn('inline-flex h-11 w-11', className)} aria-hidden />;
   }
 
   const isDark = resolvedTheme === 'dark';
@@ -28,8 +28,8 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={t('toggle')}
       className={cn('relative text-muted-foreground', className)}
     >
-      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
     </Button>
   );
 }
@@ -42,9 +42,9 @@ export function ThemePicker() {
   useEffect(() => setMounted(true), []);
 
   const options = [
-    { value: 'light', label: t('light'), swatch: 'bg-[#f7f5fb] border-black/10' },
+    { value: 'light', label: t('light'), swatch: 'bg-[#fbfaff] border-black/10' },
     { value: 'dark', label: t('dark'), swatch: 'bg-[#0b0914] border-white/15' },
-    { value: 'system', label: t('system'), swatch: 'bg-gradient-to-br from-[#f7f5fb] to-[#0b0914] border-black/10' },
+    { value: 'system', label: t('system'), swatch: 'bg-gradient-to-br from-[#fbfaff] to-[#0b0914] border-black/10' },
   ] as const;
 
   return (

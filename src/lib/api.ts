@@ -86,9 +86,17 @@ installInterceptors(univ);
 // walkr-ecko-server auth
 // ════════════════════════════════════════════════════════════════════════
 
+function loginBody(identifier: string, password: string) {
+  const trimmed = identifier.trim();
+  if (trimmed.includes('@')) return { email: trimmed, password };
+  return { username: trimmed, password };
+}
+
 export const authApi = {
-  login: (email: string, password: string) =>
-    api.post<AuthTokens>('/v1/auth/login', { email, password }).then((r) => r.data),
+  login: (identifier: string, password: string) =>
+    api.post<AuthTokens>('/v1/auth/login', loginBody(identifier, password)).then((r) => r.data),
+  register: (body: { email: string; username: string; password: string; locale?: string }) =>
+    api.post<AuthTokens>('/v1/auth/register', { ...body, isAdult: true }).then((r) => r.data),
   logout: (refreshToken: string) =>
     api.post('/v1/auth/logout', { refreshToken }).then((r) => r.data),
   me: () => api.get<{ user: User }>('/v1/auth/me').then((r) => r.data),
@@ -264,10 +272,17 @@ export const publicCoursesApi = {
 };
 
 export const publicArticlesApi = {
-  list: (params?: { locale?: string }) =>
+  list: (params?: { locale?: string; category?: string; search?: string; limit?: number }) =>
     univ.get<{ articles: PublicArticleListItem[]; pagination: Pagination }>('/public/articles', { params }).then((r) => r.data),
   get: (slug: string, locale?: string) =>
     univ.get<{ article: PublicArticle }>(`/public/articles/${slug}`, { params: locale ? { locale } : undefined }).then((r) => r.data),
+};
+
+export const publicBlogApi = {
+  featured: (locale?: string) =>
+    univ.get<{ featured: PublicArticleListItem[]; featuredSlugs: string[] }>('/public/blog', {
+      params: locale ? { locale } : undefined,
+    }).then((r) => r.data),
 };
 
 // Re-export authenticated Article CRUD types for completeness even though

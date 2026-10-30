@@ -28,12 +28,12 @@ export function PortalShell({
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-gray-950">
+    <div className="app-backdrop flex min-h-screen">
       <Sidebar variant={variant} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex min-w-0 flex-1 flex-col lg:ms-64">
+      <div className="flex min-w-0 flex-1 flex-col lg:ms-72">
         <PortalHeader locale={locale} onMenuClick={() => setSidebarOpen(true)} />
-        <main id="main-content" className="animate-fade-in flex-1 p-4 lg:p-6">
-          {children}
+        <main id="main-content" className="animate-fade-in flex-1 px-5 pb-12 pt-6 lg:px-10 lg:pt-8">
+          <div className="mx-auto w-full max-w-6xl">{children}</div>
         </main>
       </div>
     </div>

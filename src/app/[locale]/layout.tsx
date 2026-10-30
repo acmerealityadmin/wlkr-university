@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Roboto, Roboto_Slab } from 'next/font/google';
+import { Cinzel, Nunito_Sans, Plus_Jakarta_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -8,16 +8,23 @@ import { NativeBootstrap } from '@/components/NativeBootstrap';
 import { Providers } from '@/components/providers';
 import '../globals.css';
 
-const roboto = Roboto({
+const nunitoSans = Nunito_Sans({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '700'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-sans',
   display: 'swap',
 });
-const robotoSlab = Roboto_Slab({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['500', '600', '700', '800'],
   variable: '--font-heading',
+  display: 'swap',
+});
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-display',
   display: 'swap',
 });
 
@@ -61,7 +68,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
-      <body className={`${roboto.variable} ${robotoSlab.variable} font-sans font-medium antialiased`}>
+      <body className={`${nunitoSans.variable} ${jakarta.variable} ${cinzel.variable} font-sans font-medium antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <NativeBootstrap />

@@ -295,6 +295,8 @@ export interface Article {
   body: string;
   excerpt: string;
   coverMediaId: string | null;
+  coverImageUrl: string;
+  category: string;
   tags: string[];
   status: ContentStatus;
   publishedAt: string | null;
@@ -310,6 +312,8 @@ export interface PublicArticleListItem {
   locale: string;
   excerpt: string;
   coverMediaId: string | null;
+  coverImageUrl: string;
+  category: string;
   tags: string[];
   publishedAt: string | null;
   seo: { metaTitle: string; metaDescription: string };
@@ -322,6 +326,8 @@ export interface PublicArticle {
   body: string;
   excerpt: string;
   coverMediaId: string | null;
+  coverImageUrl: string;
+  category: string;
   tags: string[];
   publishedAt: string | null;
   seo: { metaTitle: string; metaDescription: string };

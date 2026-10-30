@@ -4,24 +4,25 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
+  'inline-flex items-center justify-center gap-2 rounded-full text-base font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97] [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
-          'bg-brand-600 text-white shadow-sm hover:bg-brand-700 dark:bg-brand-500 dark:text-white dark:hover:bg-brand-400',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-muted',
+          'bg-brand-600 text-white shadow-button hover:-translate-y-0.5 hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-400',
+        secondary:
+          'bg-brand-50 text-brand-700 hover:bg-brand-100 dark:bg-brand-500/15 dark:text-brand-200 dark:hover:bg-brand-500/25',
         outline:
-          'border border-border bg-card/80 text-foreground hover:bg-muted hover:border-brand-300/70 dark:hover:border-brand-500/40',
-        ghost: 'text-muted-foreground hover:bg-muted hover:text-foreground',
-        destructive: 'bg-rose-600 text-white shadow-sm hover:bg-rose-700',
-        link: 'text-brand-600 underline-offset-4 hover:underline p-0 h-auto dark:text-brand-400',
+          'border-2 border-gray-200 bg-white text-gray-800 hover:border-brand-300 hover:bg-brand-50/60 hover:text-brand-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:border-brand-500/60',
+        ghost: 'text-gray-600 hover:bg-brand-50 hover:text-brand-700 dark:text-gray-300 dark:hover:bg-gray-800',
+        destructive: 'bg-rose-500 text-white shadow-sm hover:bg-rose-600',
+        link: 'h-auto p-0 font-bold text-brand-600 underline-offset-4 hover:underline dark:text-brand-300',
       },
       size: {
-        default: 'h-9 px-4 py-2',
-        sm: 'h-8 px-3 text-xs',
-        lg: 'h-11 px-6',
-        icon: 'h-9 w-9',
+        default: 'h-12 px-6',
+        sm: 'h-10 px-4 text-sm',
+        lg: 'h-14 px-8 text-lg',
+        icon: 'h-11 w-11',
       },
     },
     defaultVariants: { variant: 'default', size: 'default' },

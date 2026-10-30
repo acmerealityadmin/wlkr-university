@@ -174,6 +174,10 @@ build output isn't).
   **`wlkr-ecko-server/src/routes/university/`** (not here), then add a
   matching method to the relevant API object in `src/lib/api.ts`.
 
+## Visual style
+
+Public, marketing, and auth heroes use low-poly 3D WLKR-game backgrounds with WLKR characters (Ecko and friends). This is the workspace rule `../.cursor/rules/university-lowpoly-visuals.mdc`, so follow it for any new hero or background. Current art: `public/images/campus-hero.jpg` (landing) and `public/images/signup-hero.jpg` (`/signup`).
+
 ## Known gaps / not yet built
 
 - **Public media gallery**: `wlkr-ecko-server`'s `/v1/university/media` is

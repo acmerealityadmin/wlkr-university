@@ -72,11 +72,11 @@ export function SearchCommand({
           onClick={() => setOpen(true)}
           aria-label={t('openHint')}
           className={cn(
-            'inline-flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden',
+            'inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-brand-50 hover:text-brand-700 sm:hidden',
             className,
           )}
         >
-          <Search className="h-4 w-4" />
+          <Search className="h-5 w-5" />
         </button>
       ) : (
         <>
@@ -84,21 +84,21 @@ export function SearchCommand({
             type="button"
             onClick={() => setOpen(true)}
             aria-label={t('openHint')}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-brand-50 hover:text-brand-700 lg:hidden"
           >
-            <Search className="h-4 w-4" />
+            <Search className="h-5 w-5" />
           </button>
           <button
             type="button"
             onClick={() => setOpen(true)}
             className={cn(
-              'hidden h-9 w-64 shrink-0 items-center gap-2 rounded-xl border border-border bg-card/80 px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:border-brand-300/70 hover:bg-muted/60 lg:flex',
+              'hidden h-12 w-72 shrink-0 items-center gap-3 rounded-full border-2 border-gray-100 bg-white px-5 text-base text-gray-400 shadow-soft transition-colors hover:border-brand-200 dark:border-gray-800 dark:bg-gray-900 lg:flex',
               className,
             )}
           >
-            <Search className="h-4 w-4" />
+            <Search className="h-5 w-5" />
             <span className="flex-1 truncate text-left">{t('placeholder')}</span>
-            <kbd className="hidden rounded-md border border-border px-1.5 text-[10px] text-muted-foreground sm:inline">⌘K</kbd>
+            <kbd className="hidden rounded-lg bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-500 dark:bg-gray-800 sm:inline">⌘K</kbd>
           </button>
         </>
       )}
@@ -106,7 +106,7 @@ export function SearchCommand({
       {open && (
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-background/75 pt-[18vh] backdrop-blur-md" onClick={() => setOpen(false)}>
           <div
-            className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-2 shadow-xl dark:border-gray-800 dark:bg-gray-900"
+            className="w-full max-w-xl rounded-3xl border border-gray-100 bg-white p-3 shadow-lift dark:border-gray-800 dark:bg-gray-900"
             onClick={(e) => e.stopPropagation()}
           >
             <Command shouldFilter={false} className="w-full">
@@ -117,21 +117,21 @@ export function SearchCommand({
                   value={query}
                   onValueChange={setQuery}
                   placeholder={t('placeholder')}
-                  className="h-10 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                  className="h-12 flex-1 bg-transparent text-lg text-foreground outline-none placeholder:text-gray-400"
                 />
                 <button
                   type="button"
                   onClick={onMicClick}
                   aria-label={t('voiceHint')}
                   className={cn(
-                    'flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted',
+                    'flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-brand-50 hover:text-brand-700',
                     voice.state === 'recording' && 'animate-pulse text-red-500',
                   )}
                 >
-                  <Mic className="h-4 w-4" />
+                  <Mic className="h-5 w-5" />
                 </button>
                 <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="text-muted-foreground hover:text-foreground">
-                  <X className="h-4 w-4" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
               {voice.state === 'recording' && <p className="px-2 py-2 text-xs text-red-500">{t('listening')}</p>}
@@ -147,10 +147,10 @@ export function SearchCommand({
                       setOpen(false);
                       window.location.href = `/${locale}${r.url}`;
                     }}
-                    className="cursor-pointer rounded-lg px-3 py-2 text-sm data-[selected=true]:bg-accent"
+                    className="cursor-pointer rounded-2xl px-4 py-3 text-base data-[selected=true]:bg-brand-50 dark:data-[selected=true]:bg-brand-500/15"
                   >
-                    <div className="font-medium text-foreground">{r.title}</div>
-                    {r.excerpt && <div className="line-clamp-1 text-xs text-muted-foreground">{r.excerpt}</div>}
+                    <div className="font-bold text-foreground">{r.title}</div>
+                    {r.excerpt && <div className="line-clamp-1 text-sm text-muted-foreground">{r.excerpt}</div>}
                   </Command.Item>
                 ))}
               </Command.List>
